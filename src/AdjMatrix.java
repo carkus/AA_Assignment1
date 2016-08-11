@@ -82,8 +82,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         		//System.out.println("ADDING: " + row[i]);
         		//String label = String.valueOf(row[i]);
         		//neighbours.add(row);
-        	}
-       		
+        	}       		
         }
         
         return neighbours;
@@ -91,8 +90,18 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     
     public void removeVertex(T vertLabel) {
-        // Implement me!
+    	int v = getIntVal(vertLabel);
+    	if (v < 0 || v > adjMatRows.length) {
+    		System.err.println("Vertex does not exist.");
+    		return;
+    	}
+    	//delete corresponding value from 'column' index...
+    	for (int i=0; i<adjMatRows.length; i++) {
+    		adjMatRows[i].remove(v);
+    	}
+    	//need to delete actual row...
     	
+    	output();
     } // end of removeVertex()
 	
     
@@ -143,12 +152,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 			if (i < adjMatRows.length) {
 				newrow[i] = adjMatRows[i];
 			} else {
-				newrow[i] = new sArray((s+1), newrow[i].getNoEdgeValue());
+				newrow[i] = new sArray((s+1));
 			}
 		}
 		adjMatRows = new sArray[s+1];
 		adjMatRows = newrow;
-    }  
+    }
+
     /**
      * Debug.
      */
