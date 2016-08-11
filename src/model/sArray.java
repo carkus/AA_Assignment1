@@ -1,13 +1,25 @@
 package model;
 
+import java.util.HashMap;
+
 public class sArray {
 	
-	private String[] values;
+	private static final String NO_EDGE_VALUE = "0";
+	public static String getNoEdgeValue() {
+		return NO_EDGE_VALUE;
+	}
+
+	private static final String HAS_EDGE_VALUE = "1";
+	public static String getHasEdgeValue() {
+		return HAS_EDGE_VALUE;
+	}
 	
-	public sArray (int s, String val) {
-		values = new String[s];
+	private Node[] values;
+	
+	public sArray (int s) {
+		values = new Node[s];
 		for (int i=0; i<s; i++) {
-			values[i] = val;
+			values[i].setValue(NO_EDGE_VALUE);
 		}
 	}
 	
@@ -26,22 +38,22 @@ public class sArray {
 	}	
 	
 	public void setEdge(int t, String val) {
-		values[t] = val;
+		values[t].setValue(val);
 	}
 	public String getEdge(int s) {
-		return values[s];
+		return values[s].getValue();
 	}
 	
 	public void resize(int newsize) {
-		String[] newrow = new String[newsize];
+		Node[] newrow = new Node[newsize];
 		for (int i=0; i<newsize; i++) {
 			if (i < values.length) {
-				newrow[i] = values[i];
+				newrow[i].setValue(values[i].getValue());
 			} else {
-				newrow[i] = "0";
+				newrow[i].setValue(NO_EDGE_VALUE);
 			}
 		}
-		values = new String[newsize];
+		values = new Node[newsize];
 		values = newrow;
 	}
 	
@@ -64,5 +76,28 @@ public class sArray {
 	public int getSize() {
 		return values.length;
 	}
+	
+
+	/** 
+	 * Kind of unnecessary but will make code more extensible
+	 * If things need to change
+	 * 
+	 * */
+    private class Node
+    {
+        protected String mValue;
+
+        public Node() {}
+
+        public String getValue() {
+            return mValue;
+        }
+
+        public void setValue(String value) {
+            mValue = value;
+        }
+
+    } // end of inner class Node
+
 
 }

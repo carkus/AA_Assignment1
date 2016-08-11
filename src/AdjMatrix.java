@@ -14,12 +14,8 @@ import model.sArray;
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
 
-	//private static final Boolean allowResize = true; 
 	private static final int gSize = 5;
-	private static final String NO_EDGE_VALUE = "0";
-	private static final String HAS_EDGE_VALUE = "1";
-	//private sArray mArray;
-	//private sArray adjMatRow;
+
 	private sArray[] adjMatRows;
 	/**
 	 * Contructs empty graph.
@@ -27,30 +23,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public AdjMatrix() {
     	adjMatRows = new sArray[gSize];
 		for (int i=0; i<(gSize); i++) {
-			adjMatRows[i] = new sArray((gSize), NO_EDGE_VALUE);
+			adjMatRows[i] = new sArray((gSize));
 		}
 		output();
     } // end of AdjMatrix()
-    
-    /**
-     * Debug.
-     */
-    public void output() {
-    	System.out.print("  ");
-    	for (int j=0; j<(adjMatRows[0].getSize()); j++) {
-    		System.out.print(j + " ");
-    	}
-    	System.out.println("");
-    	for (int i=0; i<(adjMatRows.length); i++) {
-    		System.out.print(i + " ");
-			for (int j=0; j<(adjMatRows[i].getSize()); j++) {
-				System.out.print(adjMatRows[i].getEdge(j) + " ");
-			}
-			System.out.println("");
-		}
-    	System.out.println("");
-		System.out.println("SIZE: " + adjMatRows.length);
-    }
     
     /**
      * We are assuming the Adjacency Matrix is a square.
@@ -59,7 +35,6 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	//e.g. 5
     	int s = getIntVal(vertLabel);//s = 6 - becomes label and position
     	if (s < 0) System.err.println("Value must convert to a positive integer.");
-    	//if (s <= (adjMatRows.length-1)) return;    	
     	
     	//if 6 > 5 add vertex
     	if ((s+1) > adjMatRows.length) {
@@ -82,30 +57,34 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     		addVertex(tarLabel);
         }  	
     	//Set value in corresponding Vertices
-    	adjMatRows[getIntVal(srcLabel)].setEdge(getIntVal(tarLabel), HAS_EDGE_VALUE);
-    	adjMatRows[getIntVal(tarLabel)].setEdge(getIntVal(srcLabel), HAS_EDGE_VALUE);    	
+    	String edgeVal = adjMatRows[getIntVal(srcLabel)].getHasEdgeValue();
+    	adjMatRows[getIntVal(srcLabel)].setEdge(getIntVal(tarLabel), edgeVal);
+    	adjMatRows[getIntVal(tarLabel)].setEdge(getIntVal(srcLabel), edgeVal);    	
     	output();    	
     } // end of addEdge()
 	
 
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
+        if (getIntVal(vertLabel) > adjMatRows.length) {
+        	System.err.println("Vertex does not exist.");
+        	return neighbours;
+        }
         
-        //String[] row  = adjMatrix.getRow(getIntVal(vertLabel));
-        
-        
-       	/*for (int i=0; i<row.length; i++) {
+        sArray row = adjMatRows[getIntVal(vertLabel)];
+        int z = row.getSize();
+
+       	for (int i=0; i<z; i++) {
         	
-        	//System.out.println("VAL: " + row.length);
+        	System.out.println("VAL: " + row.getEdge(i));
         	
-        	if (row[i] != NO_EDGE_VALUE) {
+        	if (row.getEdge(i) != row.getNoEdgeValue()) {
         		//System.out.println("ADDING: " + row[i]);
-        		String label = String.valueOf(row[i]);
-        		neighbours.add((T) label);
+        		//String label = String.valueOf(row[i]);
+        		//neighbours.add(row);
         	}
-        }*/
-        
-        
+       		
+        }
         
         return neighbours;
     } // end of neighbours()
@@ -113,13 +92,17 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     public void removeVertex(T vertLabel) {
         // Implement me!
+    	
     } // end of removeVertex()
 	
     
     public void removeEdge(T srcLabel, T tarLabel) {
-    	//adjMatrix.setEdge(getIntVal(srcLabel), getIntVal(tarLabel), NO_EDGE_VALUE);
-    } // end of removeEdges()
-	
+    	//Set value in corresponding Vertices
+    	String edgeVal = adjMatRows[getIntVal(srcLabel)].getNoEdgeValue();
+    	adjMatRows[getIntVal(srcLabel)].setEdge(getIntVal(tarLabel), edgeVal);
+    	adjMatRows[getIntVal(tarLabel)].setEdge(getIntVal(srcLabel), edgeVal);
+    	output();
+    } // end of removeEdges()	
     
     public void printVertices(PrintWriter os) {
         // Implement me!
@@ -138,6 +121,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         return disconnectedDist;    	
     } // end of shortestPathDistance()
     
+	/**
+	 * Adjacency Matrix helpers
+	 * Written by
+	 * Mark Sciclunanewrow.
+	 * 
+	 */
+    
     private int getIntVal(T vertLabel) {
     	if (String.valueOf(vertLabel).length() == 1) {
     		char c = ((String) vertLabel).charAt(0);
@@ -146,17 +136,47 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     		return Integer.parseInt((String) vertLabel);
     	}  	
     }
+    
     private void enlarge(int s) {
-    	sArray[] newrow = new sArray[s+1];		
+    	sArray[] newrow = new sArray[s+1];
 		for (int i=0; i<(s+1); i++) {
 			if (i < adjMatRows.length) {
 				newrow[i] = adjMatRows[i];
 			} else {
-				newrow[i] = new sArray((s+1), NO_EDGE_VALUE);
+				newrow[i] = new sArray((s+1), newrow[i].getNoEdgeValue());
 			}
 		}
 		adjMatRows = new sArray[s+1];
 		adjMatRows = newrow;
     }  
+    /**
+     * Debug.
+     */
+    public void output() {
+    	System.out.print("  ");
+    	for (int j=0; j<(adjMatRows[0].getSize()); j++) {
+    		System.out.print(j + " ");
+    	}
+    	System.out.println("");
+    	for (int i=0; i<(adjMatRows.length); i++) {
+    		System.out.print(i + " ");
+    		for (int j=0; j<(adjMatRows[i].getSize()); j++) {
+    			System.out.print(adjMatRows[i].getEdge(j) + " ");
+    		}
+    		System.out.println("");
+    	}
+    	System.out.println("");
+    	System.out.println("SIZE: " + adjMatRows.length);
+    }
+    
+    static String intToString(int num, int digits) {
+    	StringBuffer s = new StringBuffer(digits);
+    	int zeroes = digits - (int) (Math.log(num) / Math.log(10)) - 1; 
+    	for (int i = 0; i < zeroes; i++) {
+    		s.append(0);
+    	}
+    	return s.append(num).toString();
+    }
+
     
 } // end of class AdjMatrix
