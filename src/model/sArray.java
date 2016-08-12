@@ -1,7 +1,5 @@
 package model;
 
-import java.util.HashMap;
-
 public class sArray {
 	
 	private static final String NO_EDGE_VALUE = "0";
@@ -39,8 +37,8 @@ public class sArray {
 	
 	public void remove(int del) {
 		Node[] newrow = new Node[values.length-1];
-		int newI = 0;		
-		for (int i=0; i<newrow.length; i++) {			
+		int newI = 0;
+		for (int i=0; i<values.length; i++) {
 			if (i != del) {
 				newrow[newI] = new Node();
 				newrow[newI].setValue(values[i].getValue());
@@ -48,24 +46,9 @@ public class sArray {
 			}
 		}
 		values = new Node[newrow.length];
-		values = newrow;
-	}	
-	public String[] getRow(int i) {
-		
-		/*String[] row = new String[matrix[i].length];
-		
-		System.out.println("LENGTH: " + matrix[i].length);
-		
-		//row = matrix[i];
-		for (int j=0; j<row.length; j++) {
-			
-			System.out.println("VAL: " + matrix[i][j]);
-			
-		}*/
-		
-		return null;
+		values = newrow;		
 	}
-	
+
 	public void setEdge(int t, String val) {
 		values[t].setValue(val);
 	}

@@ -14,7 +14,7 @@ import model.sArray;
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
 
-	private static final int gSize = 5;
+	private static final int gSize = 10;
 
 	private sArray[] adjMatRows;
 	/**
@@ -43,7 +43,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     			adjMatRows[i].resize((s+1));
     		}
     		enlarge(s);
-    	}    	
+    	} else {
+    		System.err.println("Vertex already exists.");
+    		return;
+    	}
     	output();    	
     } // end of addVertex()
 	
@@ -90,6 +93,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     
     public void removeVertex(T vertLabel) {
+    	int newI = 0;		
     	int v = getIntVal(vertLabel);
     	if (v < 0 || v > adjMatRows.length) {
     		System.err.println("Vertex does not exist.");
@@ -99,8 +103,17 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	for (int i=0; i<adjMatRows.length; i++) {
     		adjMatRows[i].remove(v);
     	}
-    	//need to delete actual row...
-    	
+    	//remove corresponding matrix 'row'
+    	sArray[] newrows = new sArray[adjMatRows.length-1];
+    	for (int i=0; i<adjMatRows.length; i++) {			
+			if (i != v) {
+				newrows[newI] = new sArray(adjMatRows[i].getSize());
+				newrows[newI] = adjMatRows[i];
+				newI++;
+			}
+		}		
+		adjMatRows = new sArray[newrows.length];
+		adjMatRows = newrows;
     	output();
     } // end of removeVertex()
 	
@@ -115,6 +128,27 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     public void printVertices(PrintWriter os) {
         // Implement me!
+    	
+    	/*File file = new File("C:/Users/Me/Desktop/directory/file.txt");
+        PrintWriter printWriter = null;
+        try
+        {
+            printWriter = new PrintWriter(file);
+            printWriter.println("hello");
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if ( printWriter != null ) 
+            {
+                printWriter.close();
+            }
+        }*/
+    	
+    	
     } // end of printVertices()
 	
     
