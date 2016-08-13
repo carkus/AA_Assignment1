@@ -137,7 +137,7 @@ public class GraphTester
 						break;                                    
 					// quit
 					case "Q":
-						bQuit = true;
+					bQuit = true;
 						break;
 					default:
 						System.err.println(lineNum + ": Unknown command.");
@@ -227,7 +227,7 @@ public class GraphTester
 		
 		
 		// if file specified, then load file
-		/*if (inputFilename != null) {
+		if (inputFilename != null) {
 		
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(inputFilename));
@@ -237,15 +237,14 @@ public class GraphTester
 		    	String[] tokens;
 		    	String srcLabel, tarLabel;
 		    	
-		    	while ((line = reader.readLine()) != null) {
+		    	/*while ((line = reader.readLine()) != null) {
 		    		tokens = line.split(delimiter);
-		    		System.out.println("Adding: " + tokens[0] + " : " + tokens[1]);
 		    		srcLabel = tokens[0];
 		    		tarLabel = tokens[1];
 		    		graph.addVertex(srcLabel);
 		    		graph.addVertex(tarLabel);
 		    		graph.addEdge(srcLabel, tarLabel);
-		    	}
+		    	}*/
 		    	
 			}
 			catch (FileNotFoundException ex) {
@@ -254,7 +253,7 @@ public class GraphTester
 			catch(IOException ex) {
 				System.err.println("Cannot open file " + args[1]);
 			}
-		}*/
+		}
 
 		// construct in and output streams/writers/readers, then process each operation.
 		try {
