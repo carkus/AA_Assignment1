@@ -11,7 +11,7 @@ import model.sArray;
  *
  * @author Jeffrey Chan, 2016.
  */
-public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
+public class AdjMatrix_numeric <T extends Object> implements FriendshipGraph<T>
 {
 
 	private static final int gSize = 1;
@@ -21,7 +21,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 	/**
 	 * Contructs empty graph.
 	 */
-    public AdjMatrix() {
+    public AdjMatrix_numeric() {
     	adjMatRows = new sArray[gSize];
 		for (int i=0; i<(gSize); i++) {
 			adjMatRows[i] = new sArray((gSize));
@@ -46,7 +46,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	if ((s+1) > adjMatRows.length) {
     		System.out.println("ADD VERTEX @ " + (s+1) + " : " + (adjMatRows.length));
     		for (int i=0; i<adjMatRows.length; i++) {
-    			adjMatRows[i].resize((s+1));
+    			//adjMatRows[i].resize((s+1));
     		}
     		enlarge(s);
     	} else {

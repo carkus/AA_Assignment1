@@ -15,7 +15,7 @@ import model.sArray;
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
 
-	private static final int gSize = 20;
+	private static final int gSize = 10;
 	private static final boolean allowGraphLoops = false;
 	private static final boolean showOutput = true;
 
@@ -41,7 +41,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public void addVertex(T vertLabel) {
     	if (getIntVal(vertLabel) < 0) System.err.println("Value must convert to a positive integer.");
     	if (indexer.get(String.valueOf(vertLabel)) != null) {
-    		System.err.println("Vertex already exists: " + indexer.get(getIntVal(vertLabel)));
+    		System.err.println("Vertex already exists.");
     		return;
     	}
 		for (int i=0; i<adjMatRows.length; i++) {
@@ -78,27 +78,20 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of addEdge()
 	
 
-    public ArrayList<T> neighbours(T vertLabel) {
+    @SuppressWarnings("unchecked")
+	public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
-        if (getIntVal(vertLabel) > adjMatRows.length) {
+        /*if (getIntVal(vertLabel) > adjMatRows.length) {
         	System.err.println("Vertex does not exist.");
         	return neighbours;
-        }
-        
-        sArray row = adjMatRows[getIntVal(vertLabel)];
-        int z = row.getSize();
-
-       	for (int i=0; i<z; i++) {
-        	
-        	System.out.println("VAL: " + row.getEdge(i));
-        	
-        	if (row.getEdge(i) != row.getNoEdgeValue()) {
-        		//System.out.println("ADDING: " + row[i]);
-        		//String label = String.valueOf(row[i]);
-        		//neighbours.add(row);
-        	}       		
-        }
-        
+        }*/        
+        int vertI = getVertexIndex(String.valueOf(vertLabel));
+        if (vertI == -1) return null;
+        for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
+        	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
+        		neighbours.add((T) String.valueOf(i));
+        	}        	
+        }    
         return neighbours;
     } // end of neighbours()
     
@@ -265,10 +258,11 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.setOut(out);
+		//System.setOut(out);
     	
 	    //String spaces = String.format("%"+String.valueOf(gSize).length()+"s", "");
-	    
+		
+		System.out.print("  ");
     	for (int j=0; j<(adjMatRows[0].getSize()); j++) {
     		System.out.print(adjMatRows[j].getLabel() + " ");
     	}
