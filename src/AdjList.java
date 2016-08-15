@@ -53,17 +53,24 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         Node tarNode = null;
         
         for (int i = 0; i < mLength; ++i) {
-            if (currNode.getValue() == srcLabel){   
+            if ((currNode.getValue()).equals(srcLabel)){   
                 srcNode = currNode;
+                System.out.println("src");
             }
-            else if(currNode.getValue() == tarLabel){
+            else if((currNode.getValue()).equals(tarLabel)){
                 tarNode = currNode;
+                System.out.println("tar");
             }
             currNode = currNode.getNextVertex();
+            System.out.println("next");
         }
 
-        if (srcNode != null || tarNode != null){
-
+        if (srcNode != null && tarNode != null){
+            attachEdge(srcNode, srcEdgeNode);
+            attachEdge(tarNode, tarEdgeNode);
+        }
+        else{
+            System.out.println(">Error! One or both vertex don't exist");
         }
 
 
@@ -108,6 +115,24 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     
     public void printEdges(PrintWriter os) {
+
+        Node currNode = mHead;
+        Node currEdgeNode = null;
+
+        StringBuffer str = new StringBuffer();
+
+        while (currNode != null) {
+            str.append(currNode.getValue() + " ");
+            currEdgeNode = currNode.getNextEdge();
+            while(currEdgeNode != null){
+                str.append(currEdgeNode.getValue() + " ");
+                currEdgeNode = currEdgeNode.getNextEdge();
+            }
+            str.append("\n");
+            currNode = currNode.getNextVertex();
+        }
+
+        System.out.println(str);
         // Implement me!
     } // end of printEdges()
     
