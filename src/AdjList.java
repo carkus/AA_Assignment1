@@ -11,22 +11,42 @@ import java.util.*;
 public class AdjList <T extends Object> implements FriendshipGraph<T>
 {   
 
-
+    protected Node mHead;
+    protected int mLength;
         
     /**
 	 * Contructs empty graph.
 	 */
     public AdjList() {
+        mHead = null;
+        mLength = 0;
     	// Implement me!
     } // end of AdjList()
     
     
     public void addVertex(T vertLabel) {
-        // Implement me!
+        Node vertexNode = new Node(vertLabel);
+             
+        // If head is empty, then list is empty and head reference need to be initialised.
+        if (mHead == null) {
+            mHead = vertexNode;
+        }
+        // otherwise, add node to the head of list.
+        else {
+            vertexNode.setNextVertex(mHead);
+            mHead = vertexNode; 
+        }
+        
+        mLength++;
     } // end of addVertex()
 	
     
     public void addEdge(T srcLabel, T tarLabel) {
+
+        if (vertexCheck(srcLabel, tarLabel)){
+            Node srcEdgeNode = new Node(tarLabel);
+            Node tarEdgeNode = new Node(srcLabel);
+        }
         // Implement me!
     } // end of addEdge()
 	
@@ -52,7 +72,18 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     public void printVertices(PrintWriter os) {
         // Implement me!
-    } // end of printVertices()
+        Node currNode = mHead;
+
+        StringBuffer str = new StringBuffer();
+
+        while (currNode != null) {
+            str.append(currNode.getValue() + " ");
+            currNode = currNode.getNextVertex();
+        }
+
+        System.out.println(str);
+
+    } // end of printVertexs()
 	
     
     public void printEdges(PrintWriter os) {
@@ -66,5 +97,71 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         // if we reach this point, source and target are disconnected
         return disconnectedDist;    	
     } // end of shortestPathDistance()
+
+
+
+
+    public boolean vertexCheck(T src, T dest) {
+        Node currNode = mHead;
+        int check = 0;
+        for (int i = 0; i < mLength; ++i) {
+            if (currNode.getValue() == src || currNode.getValue() == dest)
+            {   
+                check ++;
+            }
+            currNode = currNode.getNextVertex();
+        }
+
+        if (check == 2){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } // end of search()
+
+
+    private class Node
+    {
+        /** Stored value of node. */
+        protected T mValue;
+        /** Reference to next node. */
+        protected Node mNextVertex;
+        /** Reference to edges list**/
+        protected Node mNextEdge;
+
+        public Node(T vertex) {
+            mValue = vertex;
+            mNextVertex = null;
+            mNextEdge = null;
+        }
+
+        public T getValue() {
+            return mValue;
+        }
+
+
+        public Node getNextVertex() {
+            return mNextVertex;
+        }
+
+        public Node getNextEdge() {
+            return mNextEdge;
+        }
+
+
+        public void setValue(T value) {
+            mValue = value;
+        }
+
+
+        public void setNextVertex(Node next) {
+            mNextVertex = next;
+        }
+
+        public void setNextEdge(Node next) {
+            mNextVertex = next;
+        }
+    } // end of inner class Node
     
 } // end of class AdjList
