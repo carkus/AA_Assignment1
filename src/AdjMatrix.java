@@ -33,10 +33,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         		indexer.put(String.valueOf(i), i);
     		}   		
     	} else {
-    		adjMatRows = new sArray[1];
-    		adjMatRows[0] = new sArray(1);
-    		adjMatRows[0].setLabel("0");
-    		indexer.put("0", 0);    		
+    		adjMatRows = new sArray[0];   		
     	}
     	output();
 		//outputWatcher();
@@ -46,12 +43,19 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
      * We are assuming the Adjacency Matrix is a square.
      */
     public void addVertex(T vertLabel) {
+    	//if (adjMatRows == null) return;
     	if (getIntVal(vertLabel) < 0) System.err.println("Value must convert to a positive integer.");
         
     	//If Vertex already exists, do not add it asgain;
     	if (checkForVertex(vertLabel)) {
         	return;       
         }
+    	if (adjMatRows == null) {
+    		adjMatRows = new sArray[1];
+    		adjMatRows[0] = new sArray(1);
+    		adjMatRows[0].setLabel("0");
+    		indexer.put("0", 0);  
+    	}
 		for (int i=0; i<adjMatRows.length; i++) {
 			adjMatRows[i].expand();    			
 		}		
@@ -62,6 +66,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     public void addEdge(T srcLabel, T tarLabel) {
     	//Check for loop allowance
+    	//if (adjMatRows == null) return;
     	if (!allowGraphLoops && String.valueOf(srcLabel).equals(String.valueOf(tarLabel)) ) {
     		return;
     	}
@@ -84,11 +89,12 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of addEdge()
 	
     public ArrayList<T> neighbours(T vertLabel) {
+    	ArrayList<T> neighbours = new ArrayList<T>();
         if (!checkForVertex(vertLabel)) {
         	System.err.println("Vertex does not exist or is invalid.");
-        	return null;       
+        	return neighbours;       
         }
-        ArrayList<T> neighbours = new ArrayList<T>(getNeighbours(vertLabel));
+        neighbours = getNeighbours(vertLabel);
         return neighbours;
     } // end of neighbours()
     
@@ -116,6 +122,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 	
     
     public void removeEdge(T srcLabel, T tarLabel) {
+    	//if (adjMatRows == null) return;
     	if (!checkForVertex(srcLabel) || !checkForVertex(tarLabel)) {
     		System.err.println("Vertex parameters are invalid.");
     		return;
@@ -131,17 +138,17 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of removeEdges()	
     
     public void printVertices(PrintWriter os) {
-    	//if ( os != null ) {
-        	for (int i=0; i<adjMatRows.length; i++) {
-        		os.print(adjMatRows[i].getLabel() + " ");
-        		System.out.print(adjMatRows[i].getLabel() + " ");
-        	}
-    	//}
+    	if ( os != null ) {
+	    	for (int i=0; i<adjMatRows.length; i++) {
+	    		os.print(adjMatRows[i].getLabel() + " ");
+	    		System.out.print(adjMatRows[i].getLabel() + " ");
+	    	}
+    	}
     } // end of printVertices()
 	
     
     public void printEdges(PrintWriter os) {
-        //if (os != null) {
+        if (os != null) {
         	for (int i=0; i<adjMatRows.length; i++) {
         		Boolean vp = true;
         		for (int j=0; j<adjMatRows[i].getSize(); j++) {
@@ -156,7 +163,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         			}
         		}
         	}
-        //}
+        	System.out.println("");
+        }
         
     } // end of printEdges()
     
@@ -204,7 +212,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         return neighbours;
     }
     
-    private int getVertexIndex(String label) {    	
+    private int getVertexIndex(String label) {
+    	//if (adjMatRows == null) return -1;
     	for (int i=0; i<adjMatRows.length; i++) {
     		String c = adjMatRows[i].getLabel();
     		if (c.equals(label)) {
@@ -215,6 +224,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     }
     
     private int getDensity() {
+    	if (adjMatRows == null) return 0;//-1 ?
     	int edgyCount = 0;
 		for (int i=0; i<adjMatRows.length; i++) {
 			for (int j=0; j<adjMatRows[i].getSize(); j++) {				
