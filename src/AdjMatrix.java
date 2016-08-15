@@ -83,9 +83,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	output();
     } // end of addEdge()
 	
-
-    @SuppressWarnings("unchecked")
-	public ArrayList<T> neighbours(T vertLabel) {
+    public ArrayList<T> neighbours(T vertLabel) {
         if (!checkForVertex(vertLabel)) {
         	System.err.println("Vertex does not exist or is invalid.");
         	return null;       
@@ -193,6 +191,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	}  	
     }
 
+    @SuppressWarnings("unchecked")
     private ArrayList<T> getNeighbours(T vertLabel) {
     	ArrayList<T> neighbours = new ArrayList<T>();
         int vertI = getVertexIndex(String.valueOf(vertLabel));
