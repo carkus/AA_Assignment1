@@ -15,12 +15,12 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     protected int mLength;
         
     /**
-	 * Contructs empty graph.
-	 */
+     * Contructs empty graph.
+     */
     public AdjList() {
         mHead = null;
         mLength = 0;
-    	// Implement me!
+        // Implement me!
     } // end of AdjList()
     
     
@@ -39,17 +39,38 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         
         mLength++;
     } // end of addVertex()
-	
+    
     
     public void addEdge(T srcLabel, T tarLabel) {
 
-        if (vertexCheck(srcLabel, tarLabel)){
-            Node srcEdgeNode = new Node(tarLabel);
-            Node tarEdgeNode = new Node(srcLabel);
+        Node currNode = mHead;
+        int check = 0;
+
+        Node srcEdgeNode = new Node(tarLabel);
+        Node tarEdgeNode = new Node(srcLabel);
+
+        Node srcNode = null;
+        Node tarNode = null;
+        
+        for (int i = 0; i < mLength; ++i) {
+            if (currNode.getValue() == srcLabel){   
+                srcNode = currNode;
+            }
+            else if(currNode.getValue() == tarLabel){
+                tarNode = currNode;
+            }
+            currNode = currNode.getNextVertex();
         }
+
+        if (srcNode != null || tarNode != null){
+
+        }
+
+
+
         // Implement me!
     } // end of addEdge()
-	
+    
 
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
@@ -63,12 +84,12 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     public void removeVertex(T vertLabel) {
         // Implement me!
     } // end of removeVertex()
-	
+    
     
     public void removeEdge(T srcLabel, T tarLabel) {
         // Implement me!
     } // end of removeEdges()
-	
+    
     
     public void printVertices(PrintWriter os) {
         // Implement me!
@@ -84,7 +105,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         System.out.println(str);
 
     } // end of printVertexs()
-	
+    
     
     public void printEdges(PrintWriter os) {
         // Implement me!
@@ -92,33 +113,26 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
-    	// Implement me!
-    	
+        // Implement me!
+        
         // if we reach this point, source and target are disconnected
-        return disconnectedDist;    	
+        return disconnectedDist;        
     } // end of shortestPathDistance()
 
 
 
 
-    public boolean vertexCheck(T src, T dest) {
-        Node currNode = mHead;
-        int check = 0;
-        for (int i = 0; i < mLength; ++i) {
-            if (currNode.getValue() == src || currNode.getValue() == dest)
-            {   
-                check ++;
-            }
-            currNode = currNode.getNextVertex();
+    public void attachEdge(Node vertex, Node edge) {
+        if (vertex.getNextEdge() == null) {
+            vertex.setNextEdge(edge);
         }
-
-        if (check == 2){
-            return true;
+        // otherwise, add node to the head of list.
+        else {
+            edge.setNextEdge(vertex.getNextEdge());
+            vertex.setNextEdge(edge); 
         }
-        else{
-            return false;
-        }
-    } // end of search()
+        
+    } // end of attachEdge()
 
 
     private class Node
@@ -160,7 +174,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         }
 
         public void setNextEdge(Node next) {
-            mNextVertex = next;
+            mNextEdge = next;
         }
     } // end of inner class Node
     
