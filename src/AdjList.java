@@ -55,14 +55,11 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         for (int i = 0; i < mLength; ++i) {
             if ((currNode.getValue()).equals(srcLabel)){   
                 srcNode = currNode;
-                System.out.println("src");
             }
             else if((currNode.getValue()).equals(tarLabel)){
                 tarNode = currNode;
-                System.out.println("tar");
             }
             currNode = currNode.getNextVertex();
-            System.out.println("next");
         }
 
         if (srcNode != null && tarNode != null){
@@ -81,10 +78,40 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
 
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
+        //Find vertex
+        Node vertexNode = mHead;
+        Node edgeNode = null;
+        int arrayCount = 0;
+
+        for (int i = 0; i < mLength; ++i){
+            if ((vertexNode.getValue()).equals(vertLabel)){
+                break;
+            }
+            vertexNode = vertexNode.getNextVertex();
+        }
+
+        //Check if vertex exists
+        if (vertexNode != null){
+            edgeNode = vertexNode.getNextEdge();
+
+            //Copy edges of vertex into array
+            while(edgeNode != null){
+                neighbours.add(arrayCount, (edgeNode.getValue()));
+                //Go to next edge and up position in arrayCount
+                edgeNode = edgeNode.getNextEdge();
+                arrayCount ++;
+            }
+            //return completed neighbours
+            return neighbours;
+        }
+        else{
+            //return empty neighbours
+            return neighbours;
+        }
         
         // Implement me!
         
-        return neighbours;
+        
     } // end of neighbours()
     
     
