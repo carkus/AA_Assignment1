@@ -13,21 +13,32 @@ import java.util.ArrayList;
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
 
-	private static final int gSize = 50;
+	private static final int gSize = 10;
+	private static final boolean preBuildGraph = false;
 	private static final boolean allowGraphLoops = false;
-	private static final boolean printOutput = true;
+	private static final boolean printOutput = false;
 
 	private HashMap<String, Integer> indexer = new HashMap<String, Integer>();
 	private sArray[] adjMatRows;
 	
 	/**
-	 * Contructs empty graph.
+	 * Contructs prefilled or empty graph.
 	 */
     public AdjMatrix() {
-    	adjMatRows = new sArray[1];
-    	adjMatRows[0] = new sArray(1);
-    	adjMatRows[0].setLabel("0");
-    	indexer.put("0", 0);
+    	if (preBuildGraph) {
+    		adjMatRows = new sArray[gSize];
+    		for (int i=0; i<gSize; i++) {
+        		adjMatRows[i] = new sArray(gSize);
+        		adjMatRows[i].setLabel(String.valueOf(i));
+        		indexer.put(String.valueOf(i), i);
+    		}   		
+    	} else {
+    		adjMatRows = new sArray[1];
+    		adjMatRows[0] = new sArray(1);
+    		adjMatRows[0].setLabel("0");
+    		indexer.put("0", 0);    		
+    	}
+    	output();
 		//outputWatcher();
     } // end of AdjMatrix()
 
@@ -66,7 +77,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
     	//Set connection in corresponding vertex    	
-    	String edgeVal = adjMatRows[srcI].getHasEdgeValue();
+    	String edgeVal = String.valueOf(adjMatRows[srcI].getHasEdgeValue());
     	adjMatRows[srcI].setEdge(tarI, edgeVal);
     	adjMatRows[tarI].setEdge(srcI, edgeVal);    	
     	output();
@@ -75,21 +86,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 
     @SuppressWarnings("unchecked")
 	public ArrayList<T> neighbours(T vertLabel) {
-        ArrayList<T> neighbours = new ArrayList<T>();
         if (!checkForVertex(vertLabel)) {
         	System.err.println("Vertex does not exist or is invalid.");
         	return null;       
         }
-        int vertI = getVertexIndex(String.valueOf(vertLabel));
-        if (vertI == -1) return null;
-        for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
-        	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
-        		neighbours.add((T) String.valueOf(i));
-        	}        	
-        }    
+        ArrayList<T> neighbours = new ArrayList<T>(getNeighbours(vertLabel));
         return neighbours;
     } // end of neighbours()
-    
     
     public void removeVertex(T vertLabel) {
     	int newI = 0;
@@ -123,38 +126,39 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));    	
     	//Reset edge value to 'no connection'
-    	String edgeVal = adjMatRows[srcI].getNoEdgeValue();
+    	String edgeVal = String.valueOf(adjMatRows[srcI].getNoEdgeValue());
     	adjMatRows[srcI].setEdge(tarI, edgeVal);
     	adjMatRows[tarI].setEdge(srcI, edgeVal);
     	output();
     } // end of removeEdges()	
     
     public void printVertices(PrintWriter os) {
-    	if ( os != null ) {
+    	//if ( os != null ) {
         	for (int i=0; i<adjMatRows.length; i++) {
         		os.print(adjMatRows[i].getLabel() + " ");
+        		System.out.print(adjMatRows[i].getLabel() + " ");
         	}
-    	}
+    	//}
     } // end of printVertices()
 	
     
     public void printEdges(PrintWriter os) {
-        if (os != null) {
+        //if (os != null) {
         	for (int i=0; i<adjMatRows.length; i++) {
         		Boolean vp = true;
         		for (int j=0; j<adjMatRows[i].getSize(); j++) {
         			if (String.valueOf(adjMatRows[i].getEdge(j)).equals("1")) {
         				if (vp) {
         					os.print("\n" + adjMatRows[i].getLabel() + " ");
-        					//System.out.print("\n" + adjMatRows[i].getLabel() + " ");
+        					System.out.print("\n" + adjMatRows[i].getLabel() + " ");
         					vp = false;
         				}
         				os.print(adjMatRows[j].getLabel() + " ");
-        				//System.out.print(adjMatRows[j].getLabel() + " ");
+        				System.out.print(adjMatRows[j].getLabel() + " ");
         			}
         		}
         	}
-		}	  
+        //}
         
     } // end of printEdges()
     
@@ -188,6 +192,18 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     		return Integer.parseInt((String) vertLabel);
     	}  	
     }
+
+    private ArrayList<T> getNeighbours(T vertLabel) {
+    	ArrayList<T> neighbours = new ArrayList<T>();
+        int vertI = getVertexIndex(String.valueOf(vertLabel));
+        if (vertI == -1) return null;
+        for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
+        	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
+        		neighbours.add((T) adjMatRows[i].getLabel());
+        	}        	
+        }  
+        return neighbours;
+    }
     
     private int getVertexIndex(String label) {    	
     	for (int i=0; i<adjMatRows.length; i++) {
@@ -203,7 +219,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int edgyCount = 0;
 		for (int i=0; i<adjMatRows.length; i++) {
 			for (int j=0; j<adjMatRows[i].getSize(); j++) {				
-				if (adjMatRows[i].getEdge(j).equals("1")) {
+				if (adjMatRows[i].getEdge(j).equals(String.valueOf(adjMatRows[i].getHasEdgeValue()))) {
 					edgyCount++;
 				}
 			}
@@ -236,26 +252,31 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
      */
     public void output() {
     	if (!printOutput) return;
-
-    	//System.out.println("writeOutput()");
 		PrintWriter printWriter = null;
 		try
         {
 			printWriter = new PrintWriter("testing/current_graph.txt");
 			printWriter.print("  ");
+			System.out.print("  ");
 	    	for (int j=0; j<(adjMatRows[0].getSize()); j++) {
 	    		printWriter.print(adjMatRows[j].getLabel() + " ");
+	    		System.out.print(adjMatRows[j].getLabel() + " ");
 	    	}
 	    	printWriter.println("");
+	    	System.out.println("");
 	    	for (int i=0; i<(adjMatRows.length); i++) {
 	    		printWriter.print(adjMatRows[i].getLabel() + " ");
+	    		System.out.print(adjMatRows[i].getLabel() + " ");
 	    		//spaces = String.format("%"+String.valueOf(i).length()+"s", "");
 	    		for (int j=0; j<(adjMatRows[i].getSize()); j++) {
 	    			printWriter.print(adjMatRows[i].getEdge(j) + " ");
+	    			System.out.print(adjMatRows[i].getEdge(j) + " ");
 	    		}
 	    		printWriter.println("");
+	    		System.out.println("");
 	    	}
 	    	printWriter.println("");
+	    	System.out.println("");
 	    	printWriter.println("DENSITY (avg): " + getDensity() +"%");
 	    	printWriter.println("SIZE: " + getSize());
         }

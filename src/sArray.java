@@ -17,7 +17,7 @@ public class sArray {
 	public sArray (int s) {
 		values = new String[s];
 		for (int i=0; i<s; i++) {
-			values[i] = NO_EDGE_VALUE;
+			values[i] = getNoEdgeValue();
 		}
 	}
 	public void expand() {
@@ -27,7 +27,7 @@ public class sArray {
 		for (int i=0; i<newrow.length; i++) {
 			values[i] = newrow[i];
 		}
-		values[values.length-1] = NO_EDGE_VALUE;
+		values[values.length-1] = getNoEdgeValue();
 	}
 	
 	public void remove(int del) {
