@@ -91,8 +91,7 @@ public class GraphTester
 							StringBuffer buf = new StringBuffer();
 							for (String neigh : neighbours) {
 								buf.append(" " + neigh);
-							}
-							
+							}							
 							neighbourOutWriter.println(tokens[1] + buf.toString());
 						}
 						else {
@@ -168,6 +167,7 @@ public class GraphTester
 		if (options.has("f")) {
 			if (options.hasArgument("f")) {
 				inputFilename = (String) options.valueOf("f");
+				System.out.println("Loading: " + inputFilename);
 			}
 			else {
 				System.err.println("Missing filename argument for -f option.");
@@ -237,14 +237,14 @@ public class GraphTester
 		    	String[] tokens;
 		    	String srcLabel, tarLabel;
 		    	
-		    	/*while ((line = reader.readLine()) != null) {
+		    	while ((line = reader.readLine()) != null) {
 		    		tokens = line.split(delimiter);
 		    		srcLabel = tokens[0];
 		    		tarLabel = tokens[1];
 		    		graph.addVertex(srcLabel);
 		    		graph.addVertex(tarLabel);
 		    		graph.addEdge(srcLabel, tarLabel);
-		    	}*/
+		    	}
 		    	
 			}
 			catch (FileNotFoundException ex) {

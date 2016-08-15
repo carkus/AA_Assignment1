@@ -2,8 +2,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import model.sArray;
-
 
 /**
  * Adjacency matrix implementation for the FriendshipGraph interface.
@@ -15,7 +13,7 @@ import model.sArray;
 public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 {
 
-	private static final int gSize = 10;
+	private static final int gSize = 50;
 	private static final boolean allowGraphLoops = false;
 	private static final boolean printOutput = true;
 
@@ -26,22 +24,21 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 	 * Contructs empty graph.
 	 */
     public AdjMatrix() {
-    	adjMatRows = new sArray[gSize];
-		for (int i=0; i<(gSize); i++) {
-			adjMatRows[i] = new sArray((gSize));
-			adjMatRows[i].setLabel(String.valueOf(i));
-			indexer.put(String.valueOf(i), i);
-		}
-		output();
+    	adjMatRows = new sArray[1];
+    	adjMatRows[0] = new sArray(1);
+    	adjMatRows[0].setLabel("0");
+    	indexer.put("0", 0);
+		//outputWatcher();
     } // end of AdjMatrix()
-    
+
     /**
      * We are assuming the Adjacency Matrix is a square.
      */
     public void addVertex(T vertLabel) {
     	if (getIntVal(vertLabel) < 0) System.err.println("Value must convert to a positive integer.");
-        if (checkForVertex(vertLabel)) {
-        	System.err.println("Vertex already exists.");
+        
+    	//If Vertex already exists, do not add it asgain;
+    	if (checkForVertex(vertLabel)) {
         	return;       
         }
 		for (int i=0; i<adjMatRows.length; i++) {
@@ -55,7 +52,6 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public void addEdge(T srcLabel, T tarLabel) {
     	//Check for loop allowance
     	if (!allowGraphLoops && String.valueOf(srcLabel).equals(String.valueOf(tarLabel)) ) {
-    		System.err.println("Loops are not allowed for graph.");
     		return;
     	}
     	//Ensure vertices exist, else create them
@@ -64,7 +60,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	}
     	if (indexer.get(String.valueOf(tarLabel)) == null) {
     		addVertex(tarLabel);
-        }    	
+        }    
+
     	//get indexes of corresponding edge in vertex
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
@@ -133,51 +130,32 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of removeEdges()	
     
     public void printVertices(PrintWriter os) {
-        // Implement me!
-    	
-    	for (int i=0; i<adjMatRows.length; i++) {
-    		System.out.print(adjMatRows[i].getLabel() + " ");
+    	if ( os != null ) {
+        	for (int i=0; i<adjMatRows.length; i++) {
+        		os.print(adjMatRows[i].getLabel() + " ");
+        	}
     	}
-    	System.out.println("");
-    	
-    	/*File file = new File("C:/Users/Me/Desktop/directory/file.txt");
-        PrintWriter printWriter = null;
-        try
-        {
-            printWriter = new PrintWriter(file);
-            printWriter.println("hello");
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if ( printWriter != null ) 
-            {
-                printWriter.close();
-            }
-        }*/
-    	
-    	
     } // end of printVertices()
 	
     
     public void printEdges(PrintWriter os) {
-        // Implement me!    	
-    	for (int i=0; i<adjMatRows.length; i++) {
-    		Boolean vp = true;
-    		for (int j=0; j<adjMatRows[i].getSize(); j++) {
-    			if (String.valueOf(adjMatRows[i].getEdge(j)).equals("1")) {    				
-    				if (vp) {
-    					System.out.print("\n" + adjMatRows[i].getLabel() + " ");
-    					vp = false;
-    				}
-    				System.out.print(adjMatRows[j].getLabel() + " ");
-    			}
-    		}
-    	}
-    	System.out.println("");    	
+        if (os != null) {
+        	for (int i=0; i<adjMatRows.length; i++) {
+        		Boolean vp = true;
+        		for (int j=0; j<adjMatRows[i].getSize(); j++) {
+        			if (String.valueOf(adjMatRows[i].getEdge(j)).equals("1")) {
+        				if (vp) {
+        					os.print("\n" + adjMatRows[i].getLabel() + " ");
+        					//System.out.print("\n" + adjMatRows[i].getLabel() + " ");
+        					vp = false;
+        				}
+        				os.print(adjMatRows[j].getLabel() + " ");
+        				//System.out.print(adjMatRows[j].getLabel() + " ");
+        			}
+        		}
+        	}
+		}	  
+        
     } // end of printEdges()
     
     
@@ -185,7 +163,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	// Implement me!
     	
         // if we reach this point, source and target are disconnected
-        return disconnectedDist;    	
+        return disconnectedDist;
     } // end of shortestPathDistance()
     
 	/**
@@ -221,6 +199,23 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	return -1;
     }
     
+    private int getDensity() {
+    	int edgyCount = 0;
+		for (int i=0; i<adjMatRows.length; i++) {
+			for (int j=0; j<adjMatRows[i].getSize(); j++) {				
+				if (adjMatRows[i].getEdge(j).equals("1")) {
+					edgyCount++;
+				}
+			}
+		}
+		int avg = (int) Math.ceil((double)edgyCount / adjMatRows.length);
+		return avg ;//!= 0 ? adjMatRows.length/;
+    };
+    
+    private int getSize() {
+    	return adjMatRows.length;
+    };
+    
     private void enlarge(String label) {
     	sArray[] copy = new sArray[adjMatRows.length];    	
     	copy = adjMatRows;    	
@@ -242,10 +237,11 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public void output() {
     	if (!printOutput) return;
 
+    	//System.out.println("writeOutput()");
 		PrintWriter printWriter = null;
 		try
         {
-			printWriter = new PrintWriter("output.txt");
+			printWriter = new PrintWriter("testing/current_graph.txt");
 			printWriter.print("  ");
 	    	for (int j=0; j<(adjMatRows[0].getSize()); j++) {
 	    		printWriter.print(adjMatRows[j].getLabel() + " ");
@@ -260,7 +256,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 	    		printWriter.println("");
 	    	}
 	    	printWriter.println("");
-	    	printWriter.println("SIZE: " + adjMatRows.length);
+	    	printWriter.println("DENSITY (avg): " + getDensity() +"%");
+	    	printWriter.println("SIZE: " + getSize());
         }
         catch (FileNotFoundException e)
         {
