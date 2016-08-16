@@ -116,7 +116,39 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     
     public void removeVertex(T vertLabel) {
-        // Implement me!
+        Node currVertexNode = mHead;
+        Node prevVertexNode = null;
+
+        // if there are no vertex's
+        if (currVertexNode == null){
+            System.out.println(">There are no vertex's to remove.");
+            return;
+        }
+
+        // If the vertex is the head
+        if ((currVertexNode.getValue()).equals(vertLabel)){
+            mHead = currVertexNode.getNextVertex();
+            mLength --;
+            return;
+        }
+
+        prevVertexNode = currVertexNode;
+        currVertexNode = currVertexNode.getNextVertex();
+
+        //if the node is not the head
+        for (int i = 0; i < mLength - 1; i++){
+            if ((currVertexNode.getValue()).equals(vertLabel)){
+                prevVertexNode.setNextVertex(currVertexNode.getNextVertex());
+                mLength --;
+                return;
+            }
+            prevVertexNode = currVertexNode;
+            currVertexNode = currVertexNode.getNextVertex();
+        }
+
+        // if the loop can't find the vertex.
+        System.out.println(">No such vertex exists.");
+        return;
     } // end of removeVertex()
     
     
