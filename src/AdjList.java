@@ -161,6 +161,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         //Find the vertexs that are connected.
         for (int i = 0; i < mLength; i++){
             if ((vertexNode.getValue()).equals(srcLabel) || (vertexNode.getValue()).equals(tarLabel)){
+                prevEdgeNode = vertexNode;
                 currEdgeNode = vertexNode.getNextEdge();
 
                 //if there are no edges.
@@ -169,22 +170,18 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
                     return;
                 }
 
-
-                prevEdgeNode = currEdgeNode;
-                currEdgeNode = currEdgeNode.getNextEdge();
-
                 //finds both edges and deletes
-                while(currEdgeNode == null){
+                while(currEdgeNode != null){
                     if ((currEdgeNode.getValue()).equals(srcLabel) || (currEdgeNode.getValue()).equals(tarLabel)){
                         prevEdgeNode.setNextEdge(currEdgeNode.getNextEdge());
                         currEdgeNode = null;
                     }
-
-                    prevEdgeNode = currEdgeNode;
-                    currEdgeNode = currEdgeNode.getNextEdge();
+                    else{
+                        prevEdgeNode = currEdgeNode;
+                        currEdgeNode = currEdgeNode.getNextEdge();
+                    }
                 }
             }
-
             vertexNode = vertexNode.getNextVertex();
         }
     } // end of removeEdges()
