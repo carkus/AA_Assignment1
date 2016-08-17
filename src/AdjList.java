@@ -20,12 +20,21 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     public AdjList() {
         mHead = null;
         mLength = 0;
-        // Implement me!
     } // end of AdjList()
     
     
     public void addVertex(T vertLabel) {
         Node vertexNode = new Node(vertLabel);
+        Node checkNode = mHead;
+
+        //Check to see if vertex already exists.
+        while(checkNode != null){
+            if ((checkNode.getValue()).equals(vertLabel)){
+                System.out.println(">Vertex already exists.");
+                return;
+            }
+            checkNode = checkNode.getNextVertex();
+        }
              
         // If head is empty, then list is empty and head reference need to be initialised.
         if (mHead == null) {
@@ -52,6 +61,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         Node srcNode = null;
         Node tarNode = null;
         
+        //Finds both src and tar vertex nodes.
         for (int i = 0; i < mLength; ++i) {
             if ((currNode.getValue()).equals(srcLabel)){   
                 srcNode = currNode;
@@ -62,27 +72,25 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             currNode = currNode.getNextVertex();
         }
 
+        //checks to make sure both vertex exist.
         if (srcNode != null && tarNode != null){
-            attachEdge(srcNode, srcEdgeNode);
-            attachEdge(tarNode, tarEdgeNode);
+            if (attachEdge(srcNode, srcEdgeNode)){
+                attachEdge(tarNode, tarEdgeNode);
+            }
         }
         else{
             System.out.println(">Error! One or both vertex don't exist");
         }
-
-
-
-        // Implement me!
     } // end of addEdge()
     
 
     public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
-        //Find vertex
         Node vertexNode = mHead;
         Node edgeNode = null;
         int arrayCount = 0;
 
+        //Finds vertex
         for (int i = 0; i < mLength; ++i){
             if ((vertexNode.getValue()).equals(vertLabel)){
                 break;
@@ -108,10 +116,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             //return empty neighbours
             return neighbours;
         }
-        
-        // Implement me!
-        
-        
     } // end of neighbours()
     
     
@@ -119,14 +123,15 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         Node currVertexNode = mHead;
         Node prevVertexNode = null;
 
-        // if there are no vertex's
+        //If there are no vertex's.
         if (currVertexNode == null){
             System.out.println(">There are no vertex's to remove.");
             return;
         }
 
-        // If the vertex is the head
+        //If the vertex is the head.
         if ((currVertexNode.getValue()).equals(vertLabel)){
+            removeEdgeForVertex(currVertexNode);
             mHead = currVertexNode.getNextVertex();
             mLength --;
             return;
@@ -135,9 +140,10 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         prevVertexNode = currVertexNode;
         currVertexNode = currVertexNode.getNextVertex();
 
-        //if the node is not the head
+        //If the vertex is not the head.
         for (int i = 0; i < mLength - 1; i++){
             if ((currVertexNode.getValue()).equals(vertLabel)){
+                removeEdgeForVertex(currVertexNode);
                 prevVertexNode.setNextVertex(currVertexNode.getNextVertex());
                 mLength --;
                 return;
@@ -146,15 +152,24 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             currVertexNode = currVertexNode.getNextVertex();
         }
 
-        // if the loop can't find the vertex.
+        //If the loop can't find the vertex.
         System.out.println(">No such vertex exists.");
         return;
     } // end of removeVertex()
+
     
+    public void removeEdgeForVertex(Node deleteNode) { //Created to find edges of the vertex to then delete
+        Node edgeNode = deleteNode.getNextEdge();
+
+        while (edgeNode != null){
+            removeEdge(deleteNode.getValue(), edgeNode.getValue());
+
+            edgeNode = edgeNode.getNextEdge();
+        }
+    }
     
     public void removeEdge(T srcLabel, T tarLabel) {
         Node vertexNode = mHead;
-
         Node currEdgeNode = null;
         Node prevEdgeNode = null;
 
@@ -164,13 +179,13 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
                 prevEdgeNode = vertexNode;
                 currEdgeNode = vertexNode.getNextEdge();
 
-                //if there are no edges.
+                //If there are no edges.
                 if (currEdgeNode == null){
                     System.out.println(">This vertex has no edges.");
                     return;
                 }
 
-                //finds both edges and deletes
+                //Finds both edges and deletes
                 while(currEdgeNode != null){
                     if ((currEdgeNode.getValue()).equals(srcLabel) || (currEdgeNode.getValue()).equals(tarLabel)){
                         prevEdgeNode.setNextEdge(currEdgeNode.getNextEdge());
@@ -188,7 +203,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     
     public void printVertices(PrintWriter os) {
-        // Implement me!
         Node currNode = mHead;
 
         StringBuffer str = new StringBuffer();
@@ -198,7 +212,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             currNode = currNode.getNextVertex();
         }
 
-        System.out.println(str);
+        os.println(str);
 
     } // end of printVertexs()
     
@@ -221,41 +235,133 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             currNode = currNode.getNextVertex();
         }
 
-        System.out.println(str);
+        os.println(str);
         // Implement me!
     } // end of printEdges()
     
     
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
         // Implement me!
-        
-        // if we reach this point, source and target are disconnected
-        return disconnectedDist;        
+        ArrayList<T> neighbours;
+        ArrayList<T> checkedNeighbours = new ArrayList<T>();
+        T currNeighbour = vertLabel1;
+        int distance = disconnectedDist;
+        int check = 0;
+
+        neighbours = neighbours(currNeighbour);
+        for(int i = 0; i < neighbours.size(); i++){
+            checkedNeighbours.add(currNeighbour);
+            for(int j = 0; j < checkedNeighbours.size(); j++){
+                if ((checkedNeighbours.get(j)).equals(neighbours.get(i))){
+
+                }
+                else if((checkedNeighbours.get(j)).equals((checkedNeighbours.size())-1)){
+                    return disconnectedDist;
+                }
+                else if(neighbours.get(i).equals(vertLabel2)){
+                    distance = 1;
+                    return distance;
+                }
+                else if(distance == 0){
+                    check = shortestPathDistanceRecursive(neighbours.get(i), vertLabel2, checkedNeighbours); 
+                }
+            }
+            if (i == 0){
+                distance = check;
+            }
+            if (check < distance && check > 0){
+                distance = check;
+            }
+        }
+        if (distance == disconnectedDist){
+            return disconnectedDist;
+        }
+        else{
+            distance ++;
+        return distance;
+        }
+    } // end of shortestPathDistance()
+
+    public int shortestPathDistanceRecursive(T vertLabel1, T vertLabel2, ArrayList<T> checked) {
+     // Implement me!
+        ArrayList<T> neighbours;
+        ArrayList<T> checkedNeighbours = checked;
+        T currNeighbour = vertLabel1;
+        int distance = disconnectedDist;
+        int check = 0;
+
+        neighbours = neighbours(currNeighbour);
+        for(int i = 0; i < neighbours.size(); i++){
+            checkedNeighbours.add(currNeighbour);
+            for(int j = 0; j < checkedNeighbours.size(); j++){
+                if ((checkedNeighbours.get(j)).equals(neighbours.get(i))){
+
+                }
+                else if((checkedNeighbours.get(j)).equals((checkedNeighbours.size())-1)){
+                    return disconnectedDist;
+                }
+                else if(neighbours.get(i).equals(vertLabel2)){
+                    distance = 1;
+                    return distance;
+                }
+                else if(distance == 0){
+                    check = shortestPathDistanceRecursive(neighbours.get(i), vertLabel2, checkedNeighbours); 
+                }
+            }
+            if (i == 0){
+                distance = check;
+            }
+            if (check < distance && check > 0){
+                distance = check;
+            }
+        }
+        if (distance == disconnectedDist){
+            return disconnectedDist;
+        }
+        else{
+            distance ++;
+        return distance;
+        }
     } // end of shortestPathDistance()
 
 
 
 
-    public void attachEdge(Node vertex, Node edge) {
+    public boolean attachEdge(Node vertex, Node edge) {
+        Node checkNode = vertex.getNextEdge();
+
+        //Checks if edge already exists.
+        while(checkNode != null){
+            if ((checkNode.getValue()).equals(edge.getValue())){
+                System.out.println(">Edge already exists.");
+                return false;
+            }
+            checkNode = checkNode.getNextEdge();
+        }
+
+        //Check if list is empty.
         if (vertex.getNextEdge() == null) {
             vertex.setNextEdge(edge);
         }
-        // otherwise, add node to the head of list.
+        // otherwise, add edge to the head of list.
         else {
             edge.setNextEdge(vertex.getNextEdge());
             vertex.setNextEdge(edge); 
         }
+        return true;
         
     } // end of attachEdge()
 
 
+
+
     private class Node
     {
-        /** Stored value of node. */
+        /** Stored value of node*/
         protected T mValue;
-        /** Reference to next node. */
+        /** Reference to next Vertex node*/
         protected Node mNextVertex;
-        /** Reference to edges list**/
+        /** Reference to next edge*/
         protected Node mNextEdge;
 
         public Node(T vertex) {
@@ -268,7 +374,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             return mValue;
         }
 
-
         public Node getNextVertex() {
             return mNextVertex;
         }
@@ -277,11 +382,9 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             return mNextEdge;
         }
 
-
         public void setValue(T value) {
             mValue = value;
         }
-
 
         public void setNextVertex(Node next) {
             mNextVertex = next;
