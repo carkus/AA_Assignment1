@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -73,7 +74,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     } // end of addEdge()
 	
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
 	public ArrayList<T> neighbours(T vertLabel) {
         ArrayList<T> neighbours = new ArrayList<T>();
         if (!checkForVertex(vertLabel)) {
@@ -82,11 +83,21 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         }
         int vertI = getVertexIndex(String.valueOf(vertLabel));
         if (vertI == -1) return null;
+        
+        ArrayList<String> s = new ArrayList<String>();
+        
         for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
         	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
-        		neighbours.add((T) String.valueOf(i));
+        		
+        		//List<?> strList = (List<?>) someFunction();
+        		String sv = String.valueOf(i);
+        		
+        		s.set(i, sv);
+        		//neighbours.add
+        		//neighbours.add((T) String.valueOf(i));
         	}        	
         }    
+        neighbours.addAll((ArrayList<? extends T>) s);
         return neighbours;
     } // end of neighbours()
     

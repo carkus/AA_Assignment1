@@ -10,7 +10,6 @@ public class DataGenerator
 	
 	/** Start of integer range to generate values from. */
 	protected Double mSampleDensity;
-
 	
 	/**
 	 * Constructor.
@@ -51,7 +50,7 @@ public class DataGenerator
 		}		
 		
 		while (currentRow < sampleSize) {
-			StringBuilder sb = new StringBuilder();			
+			StringBuilder sb = new StringBuilder();
 			shuffleArray(range);			
 			for (int i = 0; i < rowEdges; i++) {
 				sb.append(currentRow + " " + range[i] + "\n");
