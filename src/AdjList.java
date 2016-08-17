@@ -153,7 +153,40 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     
     public void removeEdge(T srcLabel, T tarLabel) {
-        // Implement me!
+        Node vertexNode = mHead;
+
+        Node currEdgeNode = null;
+        Node prevEdgeNode = null;
+
+        //Find the vertexs that are connected.
+        for (int i = 0; i < mLength; i++){
+            if ((vertexNode.getValue()).equals(srcLabel) || (vertexNode.getValue()).equals(tarLabel)){
+                currEdgeNode = vertexNode.getNextEdge();
+
+                //if there are no edges.
+                if (currEdgeNode == null){
+                    System.out.println(">This vertex has no edges.");
+                    return;
+                }
+
+
+                prevEdgeNode = currEdgeNode;
+                currEdgeNode = currEdgeNode.getNextEdge();
+
+                //finds both edges and deletes
+                while(currEdgeNode == null){
+                    if ((currEdgeNode.getValue()).equals(srcLabel) || (currEdgeNode.getValue()).equals(tarLabel)){
+                        prevEdgeNode.setNextEdge(currEdgeNode.getNextEdge());
+                        currEdgeNode = null;
+                    }
+
+                    prevEdgeNode = currEdgeNode;
+                    currEdgeNode = currEdgeNode.getNextEdge();
+                }
+            }
+
+            vertexNode = vertexNode.getNextVertex();
+        }
     } // end of removeEdges()
     
     
