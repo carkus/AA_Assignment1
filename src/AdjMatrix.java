@@ -16,7 +16,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 	private static final int gSize = 10;
 	private static final boolean preBuildGraph = false;
 	private static final boolean allowGraphLoops = false;
-	private static final boolean printOutput = true;
+	private static final boolean printOutput = false;
 
 	private HashMap<String, Integer> indexer = new HashMap<String, Integer>();
 	private sArray[] adjMatRows;
@@ -44,9 +44,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	//if (adjMatRows == null) return;
     	if (getIntVal(vertLabel) < 0) System.err.println("Value must convert to a positive integer.");
         
-    	//If Vertex already exists, do not add it asgain;
+    	//If Vertex already exists, do not add it again;
     	if (checkForVertex(vertLabel)) {
-        	return;       
+    		//System.err.println("Vertex already exists, not being added. Nothing done.");
+        	return;
         }
     	if (adjMatRows == null) {
     		adjMatRows = new sArray[1];
@@ -170,10 +171,52 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
     	// Implement me!
     	
+    	/*-Choose an arbitrary vertex v and mark it visited. 
+    	-Visit and mark each (neighbour) vertices of v in turn.
+    	-Once ALL neighbours of v have been visited, select the ﬁrst visited neighbour, and visit all its (unmarked) neighbours
+    	-Then select the second visited neighbour of v, and visit all its unmarked neighbours. 
+    	-The algorithm halts when we visited all vertices.*/
+    	
+    	
+    	//get neightbours vertLabel1
+    	
+    	//
+    	
+    	//
+    	
+    	
         // if we reach this point, source and target are disconnected
         return disconnectedDist;
     } // end of shortestPathDistance()
     
+    
+    /*public void bfsSearch(int s) {
+        for (int v = 1; v <= n; v++) {
+          color[v] = White;
+          previous[v] = 0;
+        }
+        
+        Queue<Integer> q = new LinkedList<Integer>();
+        color[s] = Gray;
+        q.add(s);
+        
+        while (!q.isEmpty()) {
+          int u = q.remove();
+          
+          for (int v = 1; v <= n; v++) {
+            if (matrix[u][v] && color[v] == White) {
+              previous[v] = u;
+              color[v] = Gray;
+              q.add(v);
+            }
+          }
+          
+          color[u] = Black;
+        }  
+        
+        src = s;
+        
+    }*/
     
     /*public String findPath(int v, int w) {
         Queue<Integer> q = new LinkedList<Integer>();
@@ -187,7 +230,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
             break;
         }
         return pathTo[w];
-    }*/    
+    }    
     
     
     

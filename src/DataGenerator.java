@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -10,7 +11,6 @@ public class DataGenerator
 	
 	/** Start of integer range to generate values from. */
 	protected Double mSampleDensity;
-
 	
 	/**
 	 * Constructor.
@@ -54,7 +54,7 @@ public class DataGenerator
 			StringBuilder sb = new StringBuilder();			
 			shuffleArray(range);			
 			for (int i = 0; i < rowEdges; i++) {
-				sb.append(currentRow + " " + range[i] + "\n");
+				sb.append(currentRow + " " + String.valueOf(range[i]) + "\n");
 			}
 			samples[currentRow] = sb.toString();
 			currentRow++;			
@@ -108,7 +108,7 @@ public class DataGenerator
 			
 			DataGenerator gen = new DataGenerator(edgeDensity);
 
-			File testfile = new File("s_"+sampleSize+"_d_"+edgeDensity+".in");
+			File testfile = new File("testing/"+sampleSize+"_d_"+edgeDensity+".in");
 			testfile.createNewFile();
 			printWriter = new PrintWriter(testfile);
 			

@@ -1,5 +1,5 @@
 
-public class sArray {
+public class sArray <T extends Object> {
 	
 	private static final String NO_EDGE_VALUE = "0";
 	public String getNoEdgeValue() {
