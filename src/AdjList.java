@@ -242,35 +242,59 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
         // Implement me!
-        ArrayList<T> neighbours;
-        ArrayList<T> checkedNeighbours = new ArrayList<T>();
+        ArrayList<T> vertexNeighbours;
+        ArrayList<T> currCheckedNeighbours = new ArrayList<T>();
+        ArrayList<T> prevCheckedNeighbours = new ArrayList<T>();
         T currNeighbour = vertLabel1;
         int distance = disconnectedDist;
         int check = 0;
+        boolean checkedVertex;
+        //adds current vertex to previous checklist
+        prevCheckedNeighbours.add(currNeighbour);
+        //adds current vertex to current checklist
+        currCheckedNeighbours.addAll(prevCheckedNeighbours);
 
-        neighbours = neighbours(currNeighbour);
-        for(int i = 0; i < neighbours.size(); i++){
-            checkedNeighbours.add(currNeighbour);
-            for(int j = 0; j < checkedNeighbours.size(); j++){
-                if ((checkedNeighbours.get(j)).equals(neighbours.get(i))){
+        vertexNeighbours = neighbours(currNeighbour);
+        //adds neighbours to current checklist
+        for (int i = 0; i < vertexNeighbours.size(); i++){
+            currCheckedNeighbours.add(vertexNeighbours.get(i));
+        }
 
-                }
-                else if((checkedNeighbours.get(j)).equals((checkedNeighbours.size())-1)){
-                    return disconnectedDist;
-                }
-                else if(neighbours.get(i).equals(vertLabel2)){
+        for(int i = 0; i < vertexNeighbours.size(); i++){
+            checkedVertex = false;
+            //checks through previous checklist.
+            for(int j = 0; j < prevCheckedNeighbours.size(); j++){
+                //if the vertex has already been checked.
+                if ((prevCheckedNeighbours.get(j)).equals(vertexNeighbours.get(i))){
+                    //if the vertex is not connected to anything else that hasn't already been checked.
+                    if((j == (prevCheckedNeighbours.size()-1)) && (i == (vertexNeighbours.size()-1))){
+                        return disconnectedDist;
+                    }
+                    checkedVertex = true;
+                    break;
+                } 
+            }
+            // if the vertex hasnt been checked before.
+            if (checkedVertex == false){
+                //if the vertex is the one we desire!
+                if(vertexNeighbours.get(i).equals(vertLabel2)){
                     distance = 1;
                     return distance;
                 }
-                else if(distance == 0){
-                    check = shortestPathDistanceRecursive(neighbours.get(i), vertLabel2, checkedNeighbours); 
+                //if the vertex is not the one we desire and hasnt already been checked.
+                else{
+                    check = shortestPathDistanceRecursive(vertexNeighbours.get(i), vertLabel2, currCheckedNeighbours); 
                 }
-            }
-            if (i == 0){
-                distance = check;
-            }
-            if (check < distance && check > 0){
-                distance = check;
+                
+                if (distance == 0){
+                    distance = check;
+                }
+                else if(distance < 0 && check > 0){
+                    distance = check;
+                }
+                else if (check < distance && check > 0){
+                    distance = check;
+                }
             }
         }
         if (distance == disconnectedDist){
@@ -278,41 +302,76 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         }
         else{
             distance ++;
-        return distance;
+            return distance;
         }
     } // end of shortestPathDistance()
 
     public int shortestPathDistanceRecursive(T vertLabel1, T vertLabel2, ArrayList<T> checked) {
      // Implement me!
         ArrayList<T> neighbours;
-        ArrayList<T> checkedNeighbours = checked;
+        ArrayList<T> currCheckedNeighbours = new ArrayList<T>();
+        ArrayList<T> prevCheckedNeighbours = new ArrayList<T>();
         T currNeighbour = vertLabel1;
         int distance = disconnectedDist;
         int check = 0;
+        boolean checkedVertex;
+        //adds current vertex to previous checklist
+        prevCheckedNeighbours.addAll(checked);
+        //adds current vertex to current checklist
+        currCheckedNeighbours.addAll(checked);
 
         neighbours = neighbours(currNeighbour);
-        for(int i = 0; i < neighbours.size(); i++){
-            checkedNeighbours.add(currNeighbour);
-            for(int j = 0; j < checkedNeighbours.size(); j++){
-                if ((checkedNeighbours.get(j)).equals(neighbours.get(i))){
+        //adds neighbours to current checklist
+        for (int i = 0; i < neighbours.size(); i++){
+            checkedVertex = false;
+            for (int j = 0; j < currCheckedNeighbours.size(); j++){
+                if ((currCheckedNeighbours.get(j)).equals(neighbours.get(i))){
+                    checkedVertex = true;
+                    break;
+                }  
+            }
+            if (checkedVertex == false){
+                currCheckedNeighbours.add(neighbours.get(i));
+            }
+        }
 
+
+        for(int i = 0; i < neighbours.size(); i++){
+
+            checkedVertex = false;
+            //checks through previous checklist.
+            for(int j = 0; j < prevCheckedNeighbours.size(); j++){
+                //if the vertex has already been checked.
+                if ((prevCheckedNeighbours.get(j)).equals(neighbours.get(i))){
+                    //if the vertex is not connected to anything else that hasn't already been checked.
+                    if((j == (prevCheckedNeighbours.size()-1)) && (i == (neighbours.size()-1))){
+                        return disconnectedDist;
+                    }
+                    checkedVertex = true;
+                    break;
                 }
-                else if((checkedNeighbours.get(j)).equals((checkedNeighbours.size())-1)){
-                    return disconnectedDist;
-                }
-                else if(neighbours.get(i).equals(vertLabel2)){
+            }
+            // if the vertex hasnt been checked before.
+            if (checkedVertex == false){
+                //if the vertex is the one we desire!
+                if(neighbours.get(i).equals(vertLabel2)){
                     distance = 1;
                     return distance;
                 }
-                else if(distance == 0){
-                    check = shortestPathDistanceRecursive(neighbours.get(i), vertLabel2, checkedNeighbours); 
+                //if the vertex is not the one we desire and hasnt already been checked.
+                else{
+                    check = shortestPathDistanceRecursive(neighbours.get(i), vertLabel2, currCheckedNeighbours); 
                 }
-            }
-            if (i == 0){
-                distance = check;
-            }
-            if (check < distance && check > 0){
-                distance = check;
+                
+                if (distance == 0){
+                    distance = check;
+                }
+                else if(distance < 0 && check > 0){
+                    distance = check;
+                }
+                else if (check < distance && check > 0){
+                    distance = check;
+                }
             }
         }
         if (distance == disconnectedDist){
@@ -320,7 +379,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         }
         else{
             distance ++;
-        return distance;
+            return distance;
         }
     } // end of shortestPathDistance()
 
