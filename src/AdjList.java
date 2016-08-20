@@ -224,17 +224,21 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         StringBuffer str = new StringBuffer();
 
         while (currNode != null) {
-            str.append(currNode.getValue() + " ");
             currEdgeNode = currNode.getNextEdge();
+            if(currEdgeNode != null){
+                str.append(currNode.getValue() + " ");
+            }
             while(currEdgeNode != null){
                 str.append(currEdgeNode.getValue() + " ");
                 currEdgeNode = currEdgeNode.getNextEdge();
+                if (currEdgeNode == null){
+                    str.append("\n");
+                }
             }
-            str.append("\n");
             currNode = currNode.getNextVertex();
         }
 
-        os.println(str);
+        os.printf("%s",str);
         // Implement me!
     } // end of printEdges()
     
