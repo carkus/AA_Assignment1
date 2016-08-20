@@ -171,6 +171,25 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         Node vertexNode = mHead;
         Node currEdgeNode = null;
         Node prevEdgeNode = null;
+        int exists = 0;
+
+        //checks to see if list exists
+        if(vertexNode == null){
+            return;
+        }
+
+        //check if vertices exist
+        while(vertexNode!=null){
+            if((vertexNode.getValue()).equals(srcLabel) || (vertexNode.getValue()).equals(tarLabel)){
+                exists += 1;
+            }
+            if (exists == 2){
+                break;
+            }
+        }
+        if (exists != 2){
+            return;
+        }
 
         //Find the vertexs that are connected.
         for (int i = 0; i < mLength; i++){
