@@ -1,5 +1,5 @@
 
-public class sArray {
+public class sArray <T extends Object> {
 	
 	private static final String NO_EDGE_VALUE = "0";
 	public String getNoEdgeValue() {
@@ -12,12 +12,12 @@ public class sArray {
 	}
 	
 	private String[] values;
-	private String label;
+	private T label;
 
 	public sArray (int s) {
 		values = new String[s];
 		for (int i=0; i<s; i++) {
-			values[i] = NO_EDGE_VALUE;
+			values[i] = getNoEdgeValue();
 		}
 	}
 	public void expand() {
@@ -27,7 +27,7 @@ public class sArray {
 		for (int i=0; i<newrow.length; i++) {
 			values[i] = newrow[i];
 		}
-		values[values.length-1] = NO_EDGE_VALUE;
+		values[values.length-1] = getNoEdgeValue();
 	}
 	
 	public void remove(int del) {
@@ -56,10 +56,10 @@ public class sArray {
 		return values.length;
 	}
 	
-	public String getLabel() {
+	public T getLabel() {
 		return label;
 	}
-	public void setLabel(String label) {
+	public void setLabel(T label) {
 		this.label = label;
 	}
 
