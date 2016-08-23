@@ -12,7 +12,7 @@ public class sArray <T extends Object> {
 	}
 	
 	private String[] values;
-	private String label;
+	private T label;
 
 	public sArray (int s) {
 		values = new String[s];
@@ -56,10 +56,10 @@ public class sArray <T extends Object> {
 		return values.length;
 	}
 	
-	public String getLabel() {
+	public T getLabel() {
 		return label;
 	}
-	public void setLabel(String label) {
+	public void setLabel(T label) {
 		this.label = label;
 	}
 

@@ -49,6 +49,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     		//System.err.println("Vertex already exists, not being added. Nothing done.");
         	return;
         }
+    	//Array needs to be dynamic so initially unset
+    	//But here we check for it beuing set, if not create it
     	if (adjMatRows == null) {
     		adjMatRows = new sArray[1];
     		adjMatRows[0] = new sArray(1);
@@ -126,7 +128,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     		System.err.println("Vertex parameters are invalid.");
     		return;
     	}
-    	//get indexes of corresponding edge in vertex
+    	//get indexes of corresponding vertex
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
     	
@@ -171,11 +173,33 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public int shortestPathDistance(T vertLabel1, T vertLabel2) {
     	// Implement me!
     	
+    	int pd = 1;
+    	HashMap<String, Integer> visited = new HashMap<String, Integer>();
+    	
+    	ArrayList<T> neighbours = getNeighbours(vertLabel1);
+    	
+    	//getVertexIndex(String.valueOf(vertLabel1));
+    	
+    	
+    	
+    	for (int i=0; i<neighbours.size(); i++) {
+    		if (String.valueOf(vertLabel2).equals(String.valueOf(neighbours.get(i)))) {
+    			return pd;    			
+    		}
+    		
+    		visited.put(String.valueOf(neighbours.get(i)), i);
+    	}
+
+    	
+    	
     	/*-Choose an arbitrary vertex v and mark it visited. 
     	-Visit and mark each (neighbour) vertices of v in turn.
     	-Once ALL neighbours of v have been visited, select the ﬁrst visited neighbour, and visit all its (unmarked) neighbours
     	-Then select the second visited neighbour of v, and visit all its unmarked neighbours. 
     	-The algorithm halts when we visited all vertices.*/
+    	
+    	
+    	
     	
     	
     	//get neightbours vertLabel1
@@ -189,50 +213,27 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         return disconnectedDist;
     } // end of shortestPathDistance()
     
-    
-    /*public void bfsSearch(int s) {
-        for (int v = 1; v <= n; v++) {
-          color[v] = White;
-          previous[v] = 0;
-        }
-        
-        Queue<Integer> q = new LinkedList<Integer>();
-        color[s] = Gray;
-        q.add(s);
-        
-        while (!q.isEmpty()) {
-          int u = q.remove();
-          
-          for (int v = 1; v <= n; v++) {
-            if (matrix[u][v] && color[v] == White) {
-              previous[v] = u;
-              color[v] = Gray;
-              q.add(v);
-            }
-          }
-          
-          color[u] = Black;
-        }  
-        
-        src = s;
-        
-    }*/
-    
-    /*public String findPath(int v, int w) {
-        Queue<Integer> q = new LinkedList<Integer>();
-        boolean[] visited = new boolean[g.numVertices()];
-        String[] pathTo = new String[g.numVertices()];
+  
+    /*private void bfs(Graph G, int s) {
+        Queue<Integer> q = new Queue<Integer>();
+        for (int v = 0; v < G.V(); v++)
+            distTo[v] = INFINITY;
+        distTo[s] = 0;
+        marked[s] = true;
+        q.enqueue(s);
 
-        q.add(v);
-        pathTo[v] = v+" ";
-        while(q.peek() != null) {
-            if(runBFS(q.poll(),w,visited,q,pathTo))
-            break;
+        while (!q.isEmpty()) {
+            int v = q.dequeue();
+            for (int w : G.adj(v)) {
+                if (!marked[w]) {
+                    edgeTo[w] = v;
+                    distTo[w] = distTo[v] + 1;
+                    marked[w] = true;
+                    q.enqueue(w);
+                }
+            }
         }
-        return pathTo[w];
-    }    
-    
-    
+    }*/
     
 	/**
 	 * Adjacency Matrix helpers
@@ -240,24 +241,6 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 	 * Mark Scicluna
 	 * 
 	 */
-    
-    /*private boolean runBFS(int v, int w, boolean[] visited, Queue<Integer> q, String[] pathTo) {
-        if(visited[v]) {
-        }
-        else if(v == w)
-            return true; 
-        }
-        else {
-            visited[v] = true;
-            VertexIterator vi = g.adjacentVertices(v);
-            while(vi.hasNext()) {
-                int nextVertex = vi.next();
-                pathTo[nextVertex] = pathTo[v] + nextVertex + " ";
-                q.add(nextVertex);
-            }
-        }
-        return false;
-    }*/
     
     private Boolean checkForVertex(T vertLabel) {
     	if (getIntVal(vertLabel) < 0 || indexer.get(String.valueOf(vertLabel)) == null) {
@@ -282,16 +265,15 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         if (vertI == -1) return null;
         for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
         	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
-        		neighbours.add((T) adjMatRows[i].getLabel());
-        	}        	
+        		neighbours.add((T) adjMatRows[i].getLabel());        		
+        	}
         }  
         return neighbours;
     }
     
     private int getVertexIndex(String label) {
-    	//if (adjMatRows == null) return -1;
-    	for (int i=0; i<adjMatRows.length; i++) {
-    		String c = adjMatRows[i].getLabel();
+    	for (int i=0; i<adjMatRows.length; i++) {    		
+    		String c = (String) adjMatRows[i].getLabel();    		
     		if (c.equals(label)) {
     			return i;
     		}
