@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 /**
@@ -83,47 +82,37 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	//get indexes of corresponding edge in vertex
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
-    	//Set connection in corresponding vertex    	
+    	
+    	if (adjMatRows[srcI].getEdge(tarI) == "1" && adjMatRows[tarI].getEdge(srcI) == "1") {
+    		//System.err.println("Edge already exists, not being added. Nothing done.");
+        	return;
+    	}
+    	
+    	//Set connection in corresponding vertex
     	String edgeVal = String.valueOf(adjMatRows[srcI].getHasEdgeValue());
     	adjMatRows[srcI].setEdge(tarI, edgeVal);
     	adjMatRows[tarI].setEdge(srcI, edgeVal);    	
     	output();
     } // end of addEdge()
 	
-<<<<<<< HEAD
 
-    //@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	public ArrayList<T> neighbours(T vertLabel) {
-        ArrayList<T> neighbours = new ArrayList<T>();
-=======
-    public ArrayList<T> neighbours(T vertLabel) {
     	ArrayList<T> neighbours = new ArrayList<T>();
->>>>>>> 1d0c104259fa41a7ca76ab5394580962d013caa8
         if (!checkForVertex(vertLabel)) {
-        	System.err.println("Vertex does not exist or is invalid.");
+        	//System.err.println("Vertex does not exist or is invalid.");
         	return neighbours;       
         }
-<<<<<<< HEAD
         int vertI = getVertexIndex(String.valueOf(vertLabel));
         if (vertI == -1) return null;
-        
-        ArrayList<String> s = new ArrayList<String>();
-        
+
         for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
         	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
-        		
-        		//List<?> strList = (List<?>) someFunction();
-        		String sv = String.valueOf(i);
-        		
-        		s.set(i, sv);
-        		//neighbours.add
-        		//neighbours.add((T) String.valueOf(i));
+        		neighbours.add((T) String.valueOf(i));
         	}        	
         }    
-        neighbours.addAll((ArrayList<? extends T>) s);
-=======
+
         neighbours = getNeighbours(vertLabel);
->>>>>>> 1d0c104259fa41a7ca76ab5394580962d013caa8
         return neighbours;
     } // end of neighbours()
     
@@ -134,6 +123,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     		return;
     	}
     	int tarI = getVertexIndex(String.valueOf(vertLabel));
+    	//remove lookup reference in hashmap
+    	indexer.remove(String.valueOf(vertLabel));
     	//remove corresponding matrix 'row'
     	sArray[] newrows = new sArray[adjMatRows.length-1];
     	for (int i=0; i<adjMatRows.length; i++) {    		
@@ -160,6 +151,11 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
     	
+    	if (adjMatRows[srcI].getEdge(tarI) == "0" && adjMatRows[tarI].getEdge(srcI) == "0") {
+    		System.err.println("No relationship exists. Nothing done.");
+        	return;
+    	}    	
+    	
     	//Reset edge value to 'no connection'
     	String edgeVal = String.valueOf(adjMatRows[srcI].getNoEdgeValue());
     	adjMatRows[srcI].setEdge(tarI, edgeVal);
@@ -171,7 +167,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	if ( os != null ) {
 	    	for (int i=0; i<adjMatRows.length; i++) {
 	    		os.print(adjMatRows[i].getLabel() + " ");
-	    		System.out.print(adjMatRows[i].getLabel() + " ");
+	    		//System.out.print(adjMatRows[i].getLabel() + " ");
 	    	}
     	}
     } // end of printVertices()	
@@ -183,12 +179,12 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         		for (int j=0; j<adjMatRows[i].getSize(); j++) {
         			if (String.valueOf(adjMatRows[i].getEdge(j)).equals("1")) {
         				if (vp) {
-        					os.print("\n" + adjMatRows[i].getLabel() + " ");
-        					System.out.print("\n" + adjMatRows[i].getLabel() + " ");
+        					//os.print("\n" + adjMatRows[i].getLabel() + " ");
+        					//System.out.print("\n" + adjMatRows[i].getLabel() + " ");
         					vp = false;
         				}
-        				os.print(adjMatRows[j].getLabel() + " ");
-        				System.out.print(adjMatRows[j].getLabel() + " ");
+        				//os.print(adjMatRows[j].getLabel() + " ");
+        				//System.out.print(adjMatRows[j].getLabel() + " ");
         			}
         		}
         	}
@@ -222,7 +218,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	
     	/*-Choose an arbitrary vertex v and mark it visited. 
     	-Visit and mark each (neighbour) vertices of v in turn.
-    	-Once ALL neighbours of v have been visited, select the ﬁrst visited neighbour, and visit all its (unmarked) neighbours
+    	-Once ALL neighbours of v have been visited, select the ï¬�rst visited neighbour, and visit all its (unmarked) neighbours
     	-Then select the second visited neighbour of v, and visit all its unmarked neighbours. 
     	-The algorithm halts when we visited all vertices.*/
     	

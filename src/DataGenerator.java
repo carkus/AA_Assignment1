@@ -108,7 +108,7 @@ public class DataGenerator
 			
 			DataGenerator gen = new DataGenerator(edgeDensity);
 
-			File testfile = new File("testing/"+sampleSize+"_d_"+edgeDensity+".in");
+			File testfile = new File("testing/d"+edgeDensity+"_s"+sampleSize+".in");
 			testfile.createNewFile();
 			printWriter = new PrintWriter(testfile);
 			
