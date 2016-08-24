@@ -51,7 +51,7 @@ public class DataGenerator
 		}		
 		
 		while (currentRow < sampleSize) {
-			StringBuilder sb = new StringBuilder();			
+			StringBuilder sb = new StringBuilder();
 			shuffleArray(range);			
 			for (int i = 0; i < rowEdges; i++) {
 				sb.append(currentRow + " " + String.valueOf(range[i]) + "\n");
@@ -108,7 +108,7 @@ public class DataGenerator
 			
 			DataGenerator gen = new DataGenerator(edgeDensity);
 
-			File testfile = new File("testing/"+sampleSize+"_d_"+edgeDensity+".in");
+			File testfile = new File("testing/d"+edgeDensity+"_s"+sampleSize+".in");
 			testfile.createNewFile();
 			printWriter = new PrintWriter(testfile);
 			
