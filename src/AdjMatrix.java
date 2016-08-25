@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.ArrayList;
 
 
@@ -33,7 +35,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         		indexer.put(String.valueOf(i), i);
     		}   		
     	} else {
-    		adjMatRows = new sArray[0];   		
+    		adjMatRows = new sArray[0];
     	}
     } // end of AdjMatrix()
 
@@ -84,7 +86,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
     	
     	if (adjMatRows[srcI].getEdge(tarI) == "1" && adjMatRows[tarI].getEdge(srcI) == "1") {
-    		//System.err.println("Edge already exists, not being added. Nothing done.");
+    		System.err.println("Edge already exists, not being added. Nothing done.");
         	return;
     	}
     	
@@ -112,7 +114,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         	}        	
         }    
 
-        neighbours = getNeighbours(vertLabel);
+        neighbours = getNeighbours(String.valueOf(vertLabel));
         return neighbours;
     } // end of neighbours()
     
@@ -193,71 +195,65 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         
     } // end of printEdges()
     
-    
-    public int shortestPathDistance(T vertLabel1, T vertLabel2) {
-    	// Implement me!
-    	
-    	int pd = 1;
-    	HashMap<String, Integer> visited = new HashMap<String, Integer>();
-    	
-    	ArrayList<T> neighbours = getNeighbours(vertLabel1);
-    	
-    	//getVertexIndex(String.valueOf(vertLabel1));
-    	
-    	
-    	
-    	for (int i=0; i<neighbours.size(); i++) {
-    		if (String.valueOf(vertLabel2).equals(String.valueOf(neighbours.get(i)))) {
-    			return pd;    			
-    		}
-    		
-    		visited.put(String.valueOf(neighbours.get(i)), i);
-    	}
+    @SuppressWarnings("unchecked")
+	public int shortestPathDistance(T vertLabel1, T vertLabel2) {      
+    	int pd = 0;
+    	Boolean incremented = true; 
+    	//If Start vertex and End vertex are same. return 0; 
+		if (String.valueOf(vertLabel1).equals(String.valueOf(vertLabel2))) {
+			return pd;    			
+		}		
+		HashMap<String, Integer> visited = new HashMap<String, Integer>();    	
+		HashMap<String, Integer> children = new HashMap<String, Integer>();    	
+		Queue<String> daQ = new LinkedList<>();
+		
+		//Prime Queue with source vertex; 
+		daQ.add(String.valueOf(vertLabel1));
+		children.put(String.valueOf(vertLabel1), 1);
+		visited.put(String.valueOf(vertLabel1), 1);
+		String current = String.valueOf(vertLabel1);
+        while(daQ.size() != 0){
+            
+        	if (children.get(String.valueOf(current)) == null) {
+            	pd++;
+            }
+            
+        	current = daQ.remove();
+            if(current.equals(String.valueOf(vertLabel2))) {
+                return pd;
+            } else {
+            	//Get neighbours of currently selected node; 
 
-    	
-    	
-    	/*-Choose an arbitrary vertex v and mark it visited. 
-    	-Visit and mark each (neighbour) vertices of v in turn.
-    	-Once ALL neighbours of v have been visited, select the ï¬�rst visited neighbour, and visit all its (unmarked) neighbours
-    	-Then select the second visited neighbour of v, and visit all its unmarked neighbours. 
-    	-The algorithm halts when we visited all vertices.*/
-    	
-    	
-    	
-    	
-    	
-    	//get neightbours vertLabel1
-    	
-    	//
-    	
-    	//
-    	
-    	
-        // if we reach this point, source and target are disconnected
-        return disconnectedDist;
-    } // end of shortestPathDistance()
-    
-  
-    /*private void bfs(Graph G, int s) {
-        Queue<Integer> q = new Queue<Integer>();
-        for (int v = 0; v < G.V(); v++)
-            distTo[v] = INFINITY;
-        distTo[s] = 0;
-        marked[s] = true;
-        q.enqueue(s);
+            	ArrayList<T> neighbours = getNeighbours(current);
+            	if(neighbours.size() == 0) {
+                	return pd;
+                } else {
+                	//Iterate through neighbours, add unvisited neighbours; 
+                	for (int i=0; i<neighbours.size(); i++) {
+                		if (visited.get(String.valueOf(neighbours.get(i))) == null) {
+                			daQ.add(String.valueOf(neighbours.get(i)));
+                			visited.put(String.valueOf(neighbours.get(i)), 1);
+                			children.put(String.valueOf(neighbours.get(i)), 1);
+                			incremented = true;
+                			//System.out.println("adding: " + String.valueOf(neighbours.get(i)));
+                		}
+                		//if ()
 
-        while (!q.isEmpty()) {
-            int v = q.dequeue();
-            for (int w : G.adj(v)) {
-                if (!marked[w]) {
-                    edgeTo[w] = v;
-                    distTo[w] = distTo[v] + 1;
-                    marked[w] = true;
-                    q.enqueue(w);
+                	}
                 }
             }
+            //System.out.print("Current Neighbours: ");
+            for(String s : daQ) { 
+            	//System.out.print(s.toString()+" "); 
+            }
+            //System.out.println("");
+            //Add node to visited list; 
+            System.out.println("CURRENT: " + String.valueOf(current));
+            visited.put(String.valueOf(current), 1);
+
         }
-    }*/
+        return disconnectedDist;
+    }
     
 	/**
 	 * Adjacency Matrix helpers
@@ -283,15 +279,15 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     }
 
     @SuppressWarnings("unchecked")
-    private ArrayList<T> getNeighbours(T vertLabel) {
+    private ArrayList<T> getNeighbours(String vertLabel) {
     	ArrayList<T> neighbours = new ArrayList<T>();
         int vertI = getVertexIndex(String.valueOf(vertLabel));
         if (vertI == -1) return null;
         for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
         	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
-        		neighbours.add((T) adjMatRows[i].getLabel());        		
+        		neighbours.add((T) adjMatRows[i].getLabel());
         	}
-        }  
+        }
         return neighbours;
     }
     

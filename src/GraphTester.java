@@ -131,6 +131,7 @@ public class GraphTester
 						startTimer();
 						if (tokens.length == 3) {
 							distanceOutWriter.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
+							System.out.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
@@ -314,7 +315,7 @@ public class GraphTester
 		startTime = System.nanoTime();
 	}
 	private static void endTimer() {
-		System.out.println("\n"+(System.nanoTime() - startTime)/1000 + "  (x1000)ns");
+		//System.out.println("\n"+(System.nanoTime() - startTime)/1000 + "  (x1000)ns");
 	}
 	
 } // end of class GraphTester
