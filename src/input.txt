@@ -1,0 +1,80 @@
+av a0
+av a1
+av a2
+av a3
+av a4
+av a5
+av a6
+av a7
+av a8
+av a9
+ae a0 0
+ae a1 0
+ae a2 0
+ae a4 0
+ae a5 0
+ae a6 0
+ae a7 0
+ae a8 0
+ae a9 0
+re a0 0
+re a1 0
+re a2 0
+re a4 0
+re a5 0
+re a6 0
+re a7 0
+re a8 0
+re a9 0
+rv a0
+rv a1
+rv a2
+rv a3
+rv a4
+rv a5
+rv a6
+rv a7
+rv a8
+rv a9
+n 0
+n 0
+n 0
+n 0
+n 0
+n 0
+n 0
+n 0
+n 0
+n 0
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+s 0 24
+v
+v
+v
+v
+v
+v
+v
+v
+v
+v
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+q
+

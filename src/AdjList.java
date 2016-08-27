@@ -78,7 +78,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             }
         }
         else{
-            System.out.println(">Error! One or both vertex don't exist");
+            return;
         }
     } // end of addEdge()
     
@@ -124,7 +124,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
 
         //If there are no vertex's.
         if (currVertexNode == null){
-            System.out.println(">There are no vertex's to remove.");
             return;
         }
 
@@ -152,7 +151,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         }
 
         //If the loop can't find the vertex.
-        System.out.println(">No such vertex exists.");
         return;
     } // end of removeVertex()
 
@@ -186,10 +184,14 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             if (exists == 2){
                 break;
             }
+            vertexNode = vertexNode.getNextVertex();
         }
+
         if (exists != 2){
             return;
         }
+
+        vertexNode = mHead;
 
         //Find the vertexs that are connected.
         for (int i = 0; i < mLength; i++){
@@ -199,7 +201,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
 
                 //If there are no edges.
                 if (currEdgeNode == null){
-                    System.out.println(">This vertex has no edges.");
                     return;
                 }
 
@@ -497,7 +498,6 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         //Checks if edge already exists.
         while(checkNode != null){
             if ((checkNode.getValue()).equals(edge.getValue())){
-                System.out.println(">Edge already exists.");
                 return false;
             }
             checkNode = checkNode.getNextEdge();
