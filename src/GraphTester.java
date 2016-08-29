@@ -94,6 +94,7 @@ public class GraphTester
 							}
 							
 							neighbourOutWriter.println(tokens[1] + buf.toString());
+							System.out.println(tokens[1] + buf.toString());
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
@@ -122,6 +123,7 @@ public class GraphTester
 					case "S":
 						if (tokens.length == 3) {
 							distanceOutWriter.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
+							//System.out.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
@@ -244,7 +246,12 @@ public class GraphTester
 		    		graph.addVertex(srcLabel);
 		    		graph.addVertex(tarLabel);
 		    		graph.addEdge(srcLabel, tarLabel);
+<<<<<<< HEAD
 		    	}			
+=======
+		    	}
+		    	System.out.println("GRAPH GENERATION COMPLETE.");
+>>>>>>> d57141c78d463e0f4932d49b787d01643591bda0
 			}
 			catch (FileNotFoundException ex) {
 				System.err.println("File " + args[1] + " not found.");
