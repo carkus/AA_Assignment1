@@ -315,7 +315,7 @@ public class GraphTester
 		startTime = System.nanoTime();
 	}
 	private static void endTimer() {
-		//System.out.println("\n"+(System.nanoTime() - startTime)/1000 + "  (x1000)ns");
+		System.out.println((System.nanoTime() - startTime)/1000);
 	}
 	
 } // end of class GraphTester
