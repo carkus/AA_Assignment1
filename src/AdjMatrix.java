@@ -250,8 +250,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         		//ADD current neighbour to visited list 
         		if (visited.get(String.valueOf(neighbours.get(a))) == null) {
         			visited.put(String.valueOf(neighbours.get(a)), spd);
+        			daQ.add(String.valueOf(neighbours.get(a)));
         		}
-        		daQ.add(String.valueOf(neighbours.get(a)));         		
         	}
         	
         }
