@@ -68,97 +68,80 @@ public class GraphTester
 				switch (command.toUpperCase()) {
 					// add vertex
 					case "AV":
-						startTimer();
 						if (tokens.length == 2) {
 							graph.addVertex(tokens[1]);
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
 						}
-						endTimer();
 						break;
 	                // add edge
 					case "AE":
-						startTimer();
 						if (tokens.length == 3) {
 							graph.addEdge(tokens[1], tokens[2]);
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
 						}
-						endTimer();
 						break;                                    
 					// neighbourhood
 					case "N":
-						startTimer();
 						if (tokens.length == 2) {
 							ArrayList<String> neighbours = graph.neighbours(tokens[1]);
 							StringBuffer buf = new StringBuffer();
 							for (String neigh : neighbours) {
 								buf.append(" " + neigh);
-							}							
+							}
+							
 							neighbourOutWriter.println(tokens[1] + buf.toString());
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
 						}
-						endTimer();
+
 						break;
 					// remove vertex
 					case "RV":
-						startTimer();
 						if (tokens.length == 2) {
 							graph.removeVertex(tokens[1]);
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
 						}
-						endTimer();
 						break;
 					// remove edge
 					case "RE":
-						startTimer();
 						if (tokens.length == 3) {
 							graph.removeEdge(tokens[1], tokens[2]);
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
 						}
-						endTimer();
 						break;		
 					// compute shortest path distance
 					case "S":
-						startTimer();
 						if (tokens.length == 3) {
 							distanceOutWriter.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
 						}
-						endTimer();
 						break;							
 					// print vertices
 					case "V":
-						startTimer();
 						graph.printVertices(verticesOutWriter);
-						endTimer();
 						break;
 	                // print edges
 					case "E":
-						startTimer();
 						graph.printEdges(edgesOutWriter);
-						endTimer();
 						break;                                    
 					// quit
 					case "Q":
-					bQuit = true;
+						bQuit = true;
 						break;
 					default:
 						System.err.println(lineNum + ": Unknown command.");
 				} // end of switch()
-				
-				//end timer
-				
 			} 
 			catch (IllegalArgumentException e) {
 				System.err.println(e.getMessage());
@@ -185,7 +168,6 @@ public class GraphTester
 		if (options.has("f")) {
 			if (options.hasArgument("f")) {
 				inputFilename = (String) options.valueOf("f");
-				System.out.println("Loading: " + inputFilename);
 			}
 			else {
 				System.err.println("Missing filename argument for -f option.");
@@ -262,8 +244,7 @@ public class GraphTester
 		    		graph.addVertex(srcLabel);
 		    		graph.addVertex(tarLabel);
 		    		graph.addEdge(srcLabel, tarLabel);
-		    	}
-		    	
+		    	}			
 			}
 			catch (FileNotFoundException ex) {
 				System.err.println("File " + args[1] + " not found.");
@@ -299,7 +280,7 @@ public class GraphTester
 			PrintWriter distanceOutWriter = new PrintWriter(System.out, true);
 			if (distanceOutFilename != null) {
 				distanceOutWriter = new PrintWriter(new FileWriter(distanceOutFilename), true);
-			}
+			}			
                         
 			// process the operations
 			processOperations(inReader, graph, verticesOutWriter, edgesOutWriter, neighbourOutWriter, distanceOutWriter);
@@ -308,13 +289,5 @@ public class GraphTester
 		}
 
 	} // end of main()
-	
-	private static long startTime;
-	private static void startTimer() {
-		startTime = System.nanoTime();
-	}
-	private static void endTimer() {
-		System.out.println((System.nanoTime() - startTime)/1000);
-	}
 	
 } // end of class GraphTester

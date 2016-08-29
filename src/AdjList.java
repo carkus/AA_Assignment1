@@ -78,7 +78,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             }
         }
         else{
-            return;
+            throw new IllegalArgumentException();
         }
     } // end of addEdge()
     
@@ -112,8 +112,8 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             return neighbours;
         }
         else{
-            //return empty neighbours
-            return neighbours;
+            //Throw illegal argument
+            throw new IllegalArgumentException();
         }
     } // end of neighbours()
     
@@ -124,7 +124,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
 
         //If there are no vertex's.
         if (currVertexNode == null){
-            return;
+            throw new IllegalArgumentException();
         }
 
         //If the vertex is the head.
@@ -151,7 +151,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         }
 
         //If the loop can't find the vertex.
-        return;
+        throw new IllegalArgumentException();
     } // end of removeVertex()
 
     
@@ -173,7 +173,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
 
         //checks to see if list exists
         if(vertexNode == null){
-            return;
+            throw new IllegalArgumentException();
         }
 
         //check if vertices exist
@@ -188,7 +188,7 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         }
 
         if (exists != 2){
-            return;
+            throw new IllegalArgumentException();
         }
 
         vertexNode = mHead;
@@ -245,15 +245,9 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
 
         while (currNode != null) {
             currEdgeNode = currNode.getNextEdge();
-            if(currEdgeNode != null){
-                str.append(currNode.getValue() + " ");
-            }
             while(currEdgeNode != null){
-                str.append(currEdgeNode.getValue() + " ");
+                str.append(currNode.getValue() + " " +currEdgeNode.getValue() + "\n");
                 currEdgeNode = currEdgeNode.getNextEdge();
-                if (currEdgeNode == null){
-                    str.append("\n");
-                }
             }
             currNode = currNode.getNextVertex();
         }
@@ -263,13 +257,190 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
     } // end of printEdges()
     
     
-
-    public int shortestPathDistance(T vertLabel1, T vertLabel2) {
-        ArrayList<T> vertexNeighbours;
-        ArrayList<T> checkedVertices = new ArrayList<T>();
-        ArrayList<T> sourceVertices = new ArrayList<T>();;
+public int shortestPathDistance(T vertLabel1, T vertLabel2) {
+        ArrayList<T> vertexNeighboursStart;
+        ArrayList<T> checkedVerticesStart = new ArrayList<T>();
+        ArrayList<T> sourceVerticesStart = new ArrayList<T>();
+        ArrayList<T> vertexNeighboursEnd;
+        ArrayList<T> checkedVerticesEnd = new ArrayList<T>();
+        ArrayList<T> sourceVerticesEnd = new ArrayList<T>();
         int distance = 0;
         boolean foundDestination = false;
+        int exists = 0;
+        Node vertexNode = mHead;
+
+        //check if vertices exist
+        while(vertexNode!=null){
+            if((vertexNode.getValue()).equals(vertLabel1) || (vertexNode.getValue()).equals(vertLabel2)){
+                exists += 1;
+            }
+            if (exists == 2){
+                break;
+            }
+            vertexNode = vertexNode.getNextVertex();
+        }
+
+        if (exists != 2){
+            throw new IllegalArgumentException();
+        }
+
+
+
+        //add the neighbours of the starting point to an arraylist.
+        vertexNeighboursStart = neighbours(vertLabel1);
+        vertexNeighboursEnd = neighbours(vertLabel2);
+
+
+        //check vertexNeighboursStart to see if it's empty. If empty there are no new vertices to visit and we return disconnectedDist.
+        if (vertexNeighboursStart.size() == 0 || vertexNeighboursEnd.size() == 0){
+            return disconnectedDist;
+        }
+
+        //check all neighbours to see if they are the end point
+        for (int i = 0; i < vertexNeighboursStart.size(); i++){
+            if ((vertexNeighboursStart.get(i)).equals(vertLabel2)){
+                distance += 1;
+                return distance;
+            }
+        }
+        //The vertex is atleast 2 away (if connected at all)
+        distance += 2;
+
+        //Check to see if any of the neighbours match. If they do then the vertices are +2 away
+        for(int i = 0; i < vertexNeighboursStart.size(); i++){
+            for(int j = 0; j < vertexNeighboursEnd.size(); j++){
+                if ((vertexNeighboursStart.get(i)).equals(vertexNeighboursEnd.get(j))){
+                    return distance;
+                }
+            }
+        }
+
+        //add the vertLabel and current neighbours to a checklist (checkedVerticesStart)
+        checkedVerticesStart.add(vertLabel1);
+        checkedVerticesStart.addAll(vertexNeighboursStart);
+
+        checkedVerticesEnd.add(vertLabel2);
+        checkedVerticesEnd.addAll(vertexNeighboursEnd);        
+
+        //add the neighbours to a source vertices to keep reference on what needs to be checked.
+        sourceVerticesStart.addAll(vertexNeighboursStart);
+        sourceVerticesEnd.addAll(vertexNeighboursEnd);
+
+
+        //Start loop for remaining itterations.
+        while(foundDestination == false){
+            //clear the vertexNeighboursStart list
+            vertexNeighboursStart.clear();
+            vertexNeighboursEnd.clear();
+
+            //add the sourceVerticesStart neighbours to a list
+            for (int i = 0; i < sourceVerticesStart.size(); i++){
+                vertexNeighboursStart.addAll(neighbours(sourceVerticesStart.get(i)));
+            }
+
+            //add the sourceVerticesEnd neighbours to a list
+            for (int i = 0; i < sourceVerticesEnd.size(); i++){
+                vertexNeighboursEnd.addAll(neighbours(sourceVerticesEnd.get(i)));
+            }
+
+            //remove neighbours from vertexNeighboursStart that have been checked
+            for (int i = 0; i < vertexNeighboursStart.size(); i++){
+                for (int j = 0; j < checkedVerticesStart.size(); j++){
+                    //if it matches, remove from vertexNeighbour
+                    if ((checkedVerticesStart.get(j)).equals(vertexNeighboursStart.get(i))){
+                        vertexNeighboursStart.remove(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+
+            //remove neighbours from vertexNeighboursEnd that have been checked
+            for (int i = 0; i < vertexNeighboursEnd.size(); i++){
+                for (int j = 0; j < checkedVerticesEnd.size(); j++){
+                    //if it matches, remove from vertexNeighbour
+                    if ((checkedVerticesEnd.get(j)).equals(vertexNeighboursEnd.get(i))){
+                        vertexNeighboursEnd.remove(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+
+            //check vertexNeighboursStart to see if it's empty. If empty there are no new vertices to visit and we return disconnectedDist.
+            if (vertexNeighboursStart.size() == 0 || vertexNeighboursEnd.size() == 0){
+                return disconnectedDist;
+            }
+
+            //check all neighbours in vertexNeighboursStart to see if they are the end point
+            for (int i = 0; i < vertexNeighboursStart.size(); i++){
+                for(int j = 0; j < sourceVerticesEnd.size(); j++){
+                    if ((vertexNeighboursStart.get(i)).equals(sourceVerticesEnd.get(j))){
+                        distance += 1;
+                        return distance;
+                    }
+                }
+            }
+
+            //The vertex is atleast 2 away (if connected at all)
+            distance += 2;
+
+            //Check to see if any of the neighbours match. If they do then the vertices are +2 away
+            for(int i = 0; i < vertexNeighboursStart.size(); i++){
+                for(int j = 0; j < vertexNeighboursEnd.size(); j++){
+                    if ((vertexNeighboursStart.get(i)).equals(vertexNeighboursEnd.get(j))){
+                        return distance;
+                    }
+                }
+            }
+
+
+            //add the vertexNeighboursStart to checkedVerticesStart
+            checkedVerticesStart.clear();
+            checkedVerticesStart.addAll(sourceVerticesStart);
+            checkedVerticesStart.addAll(vertexNeighboursStart);
+
+            checkedVerticesEnd.clear();
+            checkedVerticesEnd.addAll(sourceVerticesEnd);
+            checkedVerticesEnd.addAll(vertexNeighboursEnd);
+
+            //clear the sourceVerticesStart and add the vertexNeighboursStart to sourceVerticesStart to keep reference on what needs to be checked.
+            sourceVerticesStart.clear();
+            sourceVerticesStart.addAll(vertexNeighboursStart);
+
+            sourceVerticesEnd.clear();
+            sourceVerticesEnd.addAll(vertexNeighboursEnd);
+
+        }      
+        return disconnectedDist;
+    } // end of shortestPathDistance()
+
+
+    /*public int shortestPathDistance(T vertLabel1, T vertLabel2) {
+        ArrayList<T> vertexNeighbours;
+        ArrayList<T> checkedVertices = new ArrayList<T>();
+        ArrayList<T> sourceVerticesStart = new ArrayList<T>();;
+        int distance = 0;
+        boolean foundDestination = false;
+        int exists = 0;
+        Node vertexNode = mHead;
+
+        //check if vertices exist
+        while(vertexNode!=null){
+            if((vertexNode.getValue()).equals(vertLabel1) || (vertexNode.getValue()).equals(vertLabel2)){
+                exists += 1;
+            }
+            if (exists == 2){
+                break;
+            }
+            vertexNode = vertexNode.getNextVertex();
+        }
+
+        if (exists != 2){
+            return disconnectedDist;
+        }
+
+
 
         //add the neighbours of the starting point to an arraylist.
         vertexNeighbours = neighbours(vertLabel1);
@@ -294,16 +465,16 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
         checkedVertices.addAll(vertexNeighbours);
 
         //add the neighbours to a source vertices to keep reference on what needs to be checked.
-        sourceVertices.addAll(vertexNeighbours);
+        sourceVerticesStart.addAll(vertexNeighbours);
 
         //Start loop for remaining itterations.
         while(foundDestination == false){
             //clear the vertexNeighbours list
             vertexNeighbours.clear();
 
-            //add the sourceVertices neighbours to a list
-            for (int i = 0; i < sourceVertices.size(); i++){
-                vertexNeighbours.addAll(neighbours(sourceVertices.get(i)));
+            //add the sourceVerticesStart neighbours to a list
+            for (int i = 0; i < sourceVerticesStart.size(); i++){
+                vertexNeighbours.addAll(neighbours(sourceVerticesStart.get(i)));
             }
 
             //remove neighbours from vertexNeighbours that have been checked
@@ -334,15 +505,17 @@ public class AdjList <T extends Object> implements FriendshipGraph<T>
             }
 
             //add the vertexNeighbours to checkedVertices
+            checkedVertices.clear();
+            checkedVertices.addAll(sourceVerticesStart);
             checkedVertices.addAll(vertexNeighbours);
 
-            //clear the sourceVertices and add the vertexNeighbours to sourceVertices to keep reference on what needs to be checked.
-            sourceVertices.clear();
-            sourceVertices.addAll(vertexNeighbours);
+            //clear the sourceVerticesStart and add the vertexNeighbours to sourceVerticesStart to keep reference on what needs to be checked.
+            sourceVerticesStart.clear();
+            sourceVerticesStart.addAll(vertexNeighbours);
 
         }      
         return disconnectedDist;
-    } // end of shortestPathDistance()
+    } // end of shortestPathDistance() */
 
     /*------TESTING A DIFFERENT METHOD FOR SHORTES PATH-----
     ----------------THE BELOW METHOD IS BAD--------
