@@ -131,7 +131,7 @@ public class GraphTester
 						startTimer();
 						if (tokens.length == 3) {
 							distanceOutWriter.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
-							System.out.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
+							//System.out.println(tokens[1] + " " + tokens[2] + " " + graph.shortestPathDistance(tokens[1], tokens[2]));
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");

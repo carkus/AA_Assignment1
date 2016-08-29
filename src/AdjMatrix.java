@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 
@@ -195,64 +195,68 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         
     } // end of printEdges()
     
-    @SuppressWarnings("unchecked")
-	public int shortestPathDistance(T vertLabel1, T vertLabel2) {      
-    	int pd = 0;
-    	Boolean incremented = true; 
+	public int shortestPathDistance(T vertLabel1, T vertLabel2) {
+    	
+    	int spd = 0;
     	//If Start vertex and End vertex are same. return 0; 
 		if (String.valueOf(vertLabel1).equals(String.valueOf(vertLabel2))) {
-			return pd;    			
+			return spd;    			
 		}		
-		HashMap<String, Integer> visited = new HashMap<String, Integer>();    	
-		HashMap<String, Integer> children = new HashMap<String, Integer>();    	
-		Queue<String> daQ = new LinkedList<>();
+		HashMap<String, Integer> visited = new HashMap<String, Integer>();
+		HashMap<String, Integer> referenced = new HashMap<String, Integer>();
+		Queue<String> daQ = new ArrayDeque<>();
+		Boolean incremented = false;
 		
 		//Prime Queue with source vertex; 
 		daQ.add(String.valueOf(vertLabel1));
-		children.put(String.valueOf(vertLabel1), 1);
+		referenced.put(String.valueOf(vertLabel1), spd);
 		visited.put(String.valueOf(vertLabel1), 1);
 		String current = String.valueOf(vertLabel1);
-        while(daQ.size() != 0){
+		
+		while(daQ.size() != 0) {
             
-        	if (children.get(String.valueOf(current)) == null) {
-            	pd++;
-            }
-            
-        	current = daQ.remove();
+        	current = daQ.poll();
+        	
+        	//Check if current node is the target 
             if(current.equals(String.valueOf(vertLabel2))) {
-                return pd;
-            } else {
-            	//Get neighbours of currently selected node; 
+                return spd;
+            } 
 
-            	ArrayList<T> neighbours = getNeighbours(current);
-            	if(neighbours.size() == 0) {
-                	return pd;
-                } else {
-                	//Iterate through neighbours, add unvisited neighbours; 
-                	for (int i=0; i<neighbours.size(); i++) {
-                		if (visited.get(String.valueOf(neighbours.get(i))) == null) {
-                			daQ.add(String.valueOf(neighbours.get(i)));
-                			visited.put(String.valueOf(neighbours.get(i)), 1);
-                			children.put(String.valueOf(neighbours.get(i)), 1);
-                			incremented = true;
-                			//System.out.println("adding: " + String.valueOf(neighbours.get(i)));
-                		}
-                		//if ()
+        	//Get neighbours of currently selected node;        	
+            ArrayList<T> neighbours = new ArrayList<>(getNeighbours(current));
+        	
+        	if(neighbours.size() == 0) {
+             	return spd;
+        	}
+        	
+        	//ADD to hashmap of current and children so as to not increment path distance per beighbour
+        	incremented = false;
+        	for (int a=0; a<neighbours.size(); a++) {
+        		if (referenced.get(String.valueOf(current)) == null || referenced.get(String.valueOf(neighbours.get(a))) == null) {
+        			referenced.put(String.valueOf(neighbours.get(a)), spd);
+        			if (!incremented) {
+        				spd++;
+        				incremented = true;
+        			}
+        		}
+        	}
 
-                	}
-                }
-            }
-            //System.out.print("Current Neighbours: ");
-            for(String s : daQ) { 
-            	//System.out.print(s.toString()+" "); 
-            }
-            //System.out.println("");
-            //Add node to visited list; 
-            System.out.println("CURRENT: " + String.valueOf(current));
-            visited.put(String.valueOf(current), 1);
-
+        	for (int a=0; a<neighbours.size(); a++) {
+        		//EXIT IF Neighbour is the target node. Clear queue and return path distance.
+        		if(String.valueOf(neighbours.get(a)).equals(String.valueOf(vertLabel2))) {
+        			daQ.clear();
+                    return spd;                    
+                }        		
+        		//ADD current neighbour to visited list 
+        		if (visited.get(String.valueOf(neighbours.get(a))) == null) {
+        			visited.put(String.valueOf(neighbours.get(a)), spd);
+        		}
+        		daQ.add(String.valueOf(neighbours.get(a)));         		
+        	}
+        	
         }
-        return disconnectedDist;
+		
+		return disconnectedDist;
     }
     
 	/**
