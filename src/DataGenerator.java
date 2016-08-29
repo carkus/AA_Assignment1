@@ -52,7 +52,7 @@ public class DataGenerator
 		
 		while (currentRow < sampleSize) {
 			StringBuilder sb = new StringBuilder();
-			shuffleArray(range);			
+			shuffleArray(range);
 			for (int i = 0; i < rowEdges; i++) {
 				sb.append(currentRow + " " + String.valueOf(range[i]) + "\n");
 			}
@@ -60,8 +60,7 @@ public class DataGenerator
 			currentRow++;			
 		}
 		return samples;
-	} // end of sampleWithReplacement()	
-	
+	}
 	// Implementing Fisher Yates shuffle
 	  static void shuffleArray(int[] ar)
 	  {

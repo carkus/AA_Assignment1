@@ -169,7 +169,6 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	if ( os != null ) {
 	    	for (int i=0; i<adjMatRows.length; i++) {
 	    		os.print(adjMatRows[i].getLabel() + " ");
-	    		//System.out.print(adjMatRows[i].getLabel() + " ");
 	    	}
     	}
     } // end of printVertices()	
@@ -181,16 +180,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         		for (int j=0; j<adjMatRows[i].getSize(); j++) {
         			if (String.valueOf(adjMatRows[i].getEdge(j)).equals("1")) {
         				if (vp) {
-        					//os.print("\n" + adjMatRows[i].getLabel() + " ");
-        					//System.out.print("\n" + adjMatRows[i].getLabel() + " ");
+        					os.print("\n" + adjMatRows[i].getLabel() + " ");
         					vp = false;
         				}
-        				//os.print(adjMatRows[j].getLabel() + " ");
-        				//System.out.print(adjMatRows[j].getLabel() + " ");
+        				os.print(adjMatRows[j].getLabel() + " ");
         			}
         		}
         	}
-        	System.out.println("");
         }
         
     } // end of printEdges()
@@ -316,7 +312,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 			}
 		}
 		int avg = (int) Math.ceil((double)edgyCount / adjMatRows.length);
-		return avg ;//!= 0 ? adjMatRows.length/;
+		return avg ;
     };
     
     private int getSize() {

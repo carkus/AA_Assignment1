@@ -98,6 +98,7 @@ public class GraphTester
 								buf.append(" " + neigh);
 							}							
 							neighbourOutWriter.println(tokens[1] + buf.toString());
+							System.out.println(tokens[1] + buf.toString());
 						}
 						else {
 							System.err.println(lineNum + ": incorrect number of tokens.");
@@ -264,7 +265,7 @@ public class GraphTester
 		    		graph.addVertex(tarLabel);
 		    		graph.addEdge(srcLabel, tarLabel);
 		    	}
-		    	
+		    	System.out.println("GRAPH GENERATION COMPLETE.");
 			}
 			catch (FileNotFoundException ex) {
 				System.err.println("File " + args[1] + " not found.");

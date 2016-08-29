@@ -35,12 +35,10 @@ public class sArray {
 		int newI = 0;
 		for (int i=0; i<values.length; i++) {
 			if (i != del) {
-				//newrow[newI] = new Node();
 				newrow[newI] = values[i];
 				newI++;
 			}
 		}
-		//values = new Node[newrow.length];
 		values = newrow;		
 	}
 
