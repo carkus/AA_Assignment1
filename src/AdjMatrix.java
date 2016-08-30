@@ -85,13 +85,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
     	
-    	if (adjMatRows[srcI].getEdge(tarI) == "1" && adjMatRows[tarI].getEdge(srcI) == "1") {
+    	if (adjMatRows[srcI].getEdge(tarI) == 1 && adjMatRows[tarI].getEdge(srcI) == 1) {
     		System.err.println("Edge already exists, not being added. Nothing done.");
         	return;
     	}
     	
     	//Set connection in corresponding vertex
-    	String edgeVal = String.valueOf(adjMatRows[srcI].getHasEdgeValue());
+    	int edgeVal = adjMatRows[srcI].getHasEdgeValue();
     	adjMatRows[srcI].setEdge(tarI, edgeVal);
     	adjMatRows[tarI].setEdge(srcI, edgeVal);    	
     	output();
@@ -109,7 +109,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
         if (vertI == -1) return null;
 
         for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
-        	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
+        	if (adjMatRows[vertI].getEdge(i) == 1) {
         		neighbours.add((T) String.valueOf(i));
         	}        	
         }    
@@ -153,13 +153,13 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int srcI = getVertexIndex(String.valueOf(srcLabel));
     	int tarI = getVertexIndex(String.valueOf(tarLabel));
     	
-    	if (adjMatRows[srcI].getEdge(tarI) == "0" && adjMatRows[tarI].getEdge(srcI) == "0") {
+    	if (adjMatRows[srcI].getEdge(tarI) == 0 && adjMatRows[tarI].getEdge(srcI) == 0) {
     		System.err.println("No relationship exists. Nothing done.");
         	return;
     	}    	
     	
     	//Reset edge value to 'no connection'
-    	String edgeVal = String.valueOf(adjMatRows[srcI].getNoEdgeValue());
+    	int edgeVal = adjMatRows[srcI].getNoEdgeValue();
     	adjMatRows[srcI].setEdge(tarI, edgeVal);
     	adjMatRows[tarI].setEdge(srcI, edgeVal);
     	output();
@@ -176,14 +176,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     public void printEdges(PrintWriter os) {
         if (os != null) {
         	for (int i=0; i<adjMatRows.length; i++) {
-        		Boolean vp = true;
         		for (int j=0; j<adjMatRows[i].getSize(); j++) {
-        			if (String.valueOf(adjMatRows[i].getEdge(j)).equals("1")) {
-        				if (vp) {
-        					os.print("\n" + adjMatRows[i].getLabel() + " ");
-        					vp = false;
-        				}
-        				os.print(adjMatRows[j].getLabel() + " ");
+        			if (adjMatRows[i].getEdge(j) == 1) {
+        				os.print(adjMatRows[i].getLabel() + " " + adjMatRows[j].getLabel());
+        				System.out.println(adjMatRows[i].getLabel() + " " + adjMatRows[j].getLabel());
         			}
         		}
         	}
@@ -203,7 +199,8 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
 		Queue<String> daQ = new ArrayDeque<>();
 		Boolean incremented = false;
 		
-		//Prime Queue with source vertex; 
+		//Prime Queue with source vertex;
+		//Using Strings for Hashmap lookup
 		daQ.add(String.valueOf(vertLabel1));
 		referenced.put(String.valueOf(vertLabel1), spd);
 		visited.put(String.valueOf(vertLabel1), 1);
@@ -281,10 +278,10 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     @SuppressWarnings("unchecked")
     private ArrayList<T> getNeighbours(String vertLabel) {
     	ArrayList<T> neighbours = new ArrayList<T>();
-        int vertI = getVertexIndex(String.valueOf(vertLabel));
+        int vertI = getVertexIndex(vertLabel);
         if (vertI == -1) return null;
         for (int i=0; i<adjMatRows[vertI].getSize(); i++) {
-        	if (String.valueOf(adjMatRows[vertI].getEdge(i)).equals("1")) {
+        	if (adjMatRows[vertI].getEdge(i) == 1) {
         		neighbours.add((T) adjMatRows[i].getLabel());
         	}
         }
@@ -293,7 +290,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     
     private int getVertexIndex(String label) {
     	for (int i=0; i<adjMatRows.length; i++) {    		
-    		String c = (String) adjMatRows[i].getLabel();    		
+    		String c = (String) adjMatRows[i].getLabel();
     		if (c.equals(label)) {
     			return i;
     		}
@@ -306,7 +303,7 @@ public class AdjMatrix <T extends Object> implements FriendshipGraph<T>
     	int edgyCount = 0;
 		for (int i=0; i<adjMatRows.length; i++) {
 			for (int j=0; j<adjMatRows[i].getSize(); j++) {				
-				if (adjMatRows[i].getEdge(j).equals(String.valueOf(adjMatRows[i].getHasEdgeValue()))) {
+				if (adjMatRows[i].getEdge(j) == adjMatRows[i].getHasEdgeValue()) {
 					edgyCount++;
 				}
 			}

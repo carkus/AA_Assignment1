@@ -1,29 +1,29 @@
 
 public class sArray {
 	
-	private static final String NO_EDGE_VALUE = "0";
-	public String getNoEdgeValue() {
+	private static final int NO_EDGE_VALUE = 0;
+	public int getNoEdgeValue() {
 		return NO_EDGE_VALUE;
 	}
 
-	private static final String HAS_EDGE_VALUE = "1";
-	public String getHasEdgeValue() {
+	private static final int HAS_EDGE_VALUE = 1;
+	public int getHasEdgeValue() {
 		return HAS_EDGE_VALUE;
 	}
 	
-	private String[] values;
+	private int[] values;
 	private String label;
 
 	public sArray (int s) {
-		values = new String[s];
+		values = new int[s];
 		for (int i=0; i<s; i++) {
 			values[i] = getNoEdgeValue();
 		}
 	}
 	public void expand() {
-		String[] newrow = new String[values.length];
+		int[] newrow = new int[values.length];
 		newrow = values;
-		values = new String[(newrow.length+1)];
+		values = new int[(newrow.length+1)];
 		for (int i=0; i<newrow.length; i++) {
 			values[i] = newrow[i];
 		}
@@ -31,7 +31,7 @@ public class sArray {
 	}
 	
 	public void remove(int del) {
-		String[] newrow = new String[values.length-1];
+		int[] newrow = new int[values.length-1];
 		int newI = 0;
 		for (int i=0; i<values.length; i++) {
 			if (i != del) {
@@ -42,11 +42,11 @@ public class sArray {
 		values = newrow;		
 	}
 
-	public void setEdge(int i, String val) {
+	public void setEdge(int i, int val) {
 		values[i] = val;
 	}
 	
-	public String getEdge(int s) {
+	public int getEdge(int s) {
 		return values[s];
 	}
 	
