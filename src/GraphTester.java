@@ -246,12 +246,8 @@ public class GraphTester
 		    		graph.addVertex(srcLabel);
 		    		graph.addVertex(tarLabel);
 		    		graph.addEdge(srcLabel, tarLabel);
-<<<<<<< HEAD
-		    	}			
-=======
 		    	}
-		    	System.out.println("GRAPH GENERATION COMPLETE.");
->>>>>>> d57141c78d463e0f4932d49b787d01643591bda0
+
 			}
 			catch (FileNotFoundException ex) {
 				System.err.println("File " + args[1] + " not found.");
